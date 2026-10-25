@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /source/
 
-Sitemap: https://USERNAME.github.io/REPO/sitemap.xml
+Sitemap: https://alexiermakov.github.io/alexie/sitemap.xml
