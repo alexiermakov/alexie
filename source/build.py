@@ -18,8 +18,7 @@ SITE = cfg['site_url'].rstrip('/')
 AUTHOR = cfg['author']
 AUTHOR_GEN = cfg['author_genitive']
 YEAR = cfg['year']
-FONTS = ('https://fonts.googleapis.com/css2?family=Inter:wght@400;500'
-         '&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&display=swap')
+FONTS = 'https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap'
 
 
 def minutes(words):
@@ -92,6 +91,7 @@ def head(title, description, path, prefix, og_type, schema):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="{FONTS}" rel="stylesheet">
+<link rel="preload" href="{prefix}assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{prefix}assets/style.css">
 <script src="{prefix}assets/theme.js" defer></script>
 {ld(schema)}

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Lebowski";
+  src: url("fonts/lebowski-regular.woff2") format("woff2"),
+       url("fonts/lebowski-regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 :root {
   --paper: #f0f0ef;
   --ink: #0d0d0d;
@@ -6,8 +14,8 @@
   --accent: #e100c3;
   --placeholder: #d4d4d2;
   color-scheme: light;
-  --sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --serif: "Source Serif 4", Georgia, serif;
+  --sans: "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display: "Lebowski", "Geist", Georgia, serif;
   --gutter: clamp(16px, 3vw, 40px);
 }
 @media (prefers-color-scheme: dark) {
@@ -106,10 +114,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   text-align: left;
   padding: 14px 0 13px;
 }
-.row .tag { font: italic 400 17px/1.2 var(--serif); color: var(--mute); }
-.row .title { font: 400 clamp(22px, 2.4vw, 30px)/1.1 var(--serif); letter-spacing: -0.01em; }
-.row .num { font: 400 17px/1.2 var(--serif); font-variant-numeric: oldstyle-nums; }
-.row .time { font: italic 400 17px/1.2 var(--serif); color: var(--mute); justify-self: end; white-space: nowrap; }
+.row .tag { font: 400 15px/1.2 var(--sans); color: var(--mute); }
+.row .title { font: 400 clamp(26px, 2.8vw, 36px)/1.05 var(--display); }
+.row .num { font: 400 15px/1.2 var(--sans); font-variant-numeric: tabular-nums; }
+.row .time { font: 400 15px/1.2 var(--sans); color: var(--mute); justify-self: end; white-space: nowrap; }
 .row-main:hover .title, .row-main:hover .num, .row.open .title, .row.open .num { color: var(--accent); }
 
 .row-more {
@@ -123,7 +131,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .row.open .row-more { max-height: 420px; }
 .row-more p {
   grid-column: 3;
-  font: 400 16px/1.5 var(--serif);
+  font: 400 15px/1.55 var(--sans);
   max-width: 36em;
   padding: 2px 0 14px;
 }
@@ -156,7 +164,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   padding: 64px var(--gutter) 96px;
 }
 .meta { position: sticky; top: 70px; align-self: start; }
-.meta .num { font: 400 17px/1.2 var(--serif); font-variant-numeric: oldstyle-nums; color: var(--accent); }
+.meta .num { font: 400 15px/1.2 var(--sans); font-variant-numeric: tabular-nums; color: var(--accent); }
 .meta dl { margin-top: 24px; display: grid; gap: 2px; }
 .meta dt { color: var(--mute); margin-top: 10px; }
 .meta .back { display: inline-block; margin-top: 32px; border-bottom: 1px solid currentColor; }
@@ -164,18 +172,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .text { max-width: 34em; }
 .text h1 {
-  font: 400 clamp(36px, 5vw, 64px)/1.02 var(--serif);
-  letter-spacing: -0.02em;
+  font: 400 clamp(36px, 5vw, 64px)/1.05 var(--display);
   margin-bottom: 18px;
 }
 .text .byline { color: var(--mute); margin-bottom: 64px; }
 .text p {
-  font: 400 19px/1.6 var(--serif);
+  font: 400 17px/1.65 var(--sans);
   hanging-punctuation: first;
   margin-bottom: 0.9em;
 }
 .text p.short { text-indent: 0; }
-.text .end { margin-top: 64px; color: var(--mute); font: italic 400 17px/1.2 var(--serif); }
+.text .end { margin-top: 64px; color: var(--mute); font: 400 15px/1.2 var(--sans); }
 
 .next {
   display: grid;
@@ -186,7 +193,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .next a { grid-column: 2; display: block; }
 .next .label { color: var(--mute); display: block; margin-bottom: 6px; }
-.next .title { font: 400 clamp(26px, 3vw, 40px)/1.05 var(--serif); }
+.next .title { font: 400 clamp(26px, 3vw, 40px)/1.1 var(--display); }
 .next a:hover .title { color: var(--accent); }
 
 [hidden] { display: none !important; }
@@ -224,7 +231,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   clip: rect(0 0 0 0); white-space: nowrap;
 }
 .notfound { min-height: calc(100svh - 120px); display: grid; place-content: center; text-align: center; gap: 24px; padding: 0 var(--gutter); }
-.notfound h1 { font: 400 clamp(36px, 5vw, 64px)/1.02 var(--serif); letter-spacing: -0.02em; }
+.notfound h1 { font: 400 clamp(36px, 5vw, 64px)/1.05 var(--display); }
 .notfound a { border-bottom: 1px solid currentColor; justify-self: center; }
 .notfound a:hover { color: var(--accent); }
 .list { list-style: none; }
