@@ -1,0 +1,18 @@
+{
+  "site_url": "https://USERNAME.github.io/REPO",
+  "author": "Лёша Е.",
+  "author_genitive": "Лёши Е.",
+  "year": "2026",
+  "updated": "2026-10-25",
+  "tagline": "Короткая проза о людях, которые живут по расписанию, — до тех пор, пока мир не сдвинется на полградуса",
+  "google_site_verification": "",
+  "yandex_verification": "",
+  "stories": [
+    {"slug": "ne-kasaysya-zemli", "genre": "Притча"},
+    {"slug": "dolgiy-zakat", "genre": "Мистика"},
+    {"slug": "skrezhet", "genre": "Боди-хоррор"},
+    {"slug": "aviarezhim", "genre": "Дорожная проза"},
+    {"slug": "ostavte-otzyv", "genre": "Антиутопия"},
+    {"slug": "korporativ", "genre": "Сатира"}
+  ]
+}
