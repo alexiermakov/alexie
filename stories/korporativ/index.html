@@ -18,13 +18,16 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#f5f4f0">
+<meta name="theme-color" content="#f0f0ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<script>try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/style.css">
+<script src="../../assets/theme.js" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ShortStory","@id":"https://alexiermakov.github.io/alexie/stories/korporativ/#story","name":"Корпоратив","headline":"Корпоратив","url":"https://alexiermakov.github.io/alexie/stories/korporativ/","description":"За три дня до Нового года сотрудники компании NorthMetric на Невском собираются на корпоратив, и офисная нейросеть проводит «Тайного Санту» по новым правилам: каждому выпадает имя коллеги с заданием «Убить подручными средствами». Коллеги спокойно, почти буднично выполняют задание, пуская в ход ножницы, нож для пиццы, стилус и ленту от бейджа, а корпоративный бот поднимает их «вовлечённость» с семи до девяти из десяти. Живыми остаются только руководитель Антон Златович, невозмутимая Марина и рыдающая в углу Ира из бухгалтерии, и все трое разъезжаются по домам по праздничному Невскому, где люди всё ещё ждут новогоднего чуда.","genre":"Сатира","inLanguage":"ru","wordCount":1956,"timeRequired":"PT11M","datePublished":"2026","dateModified":"2026-10-25","image":"https://alexiermakov.github.io/alexie/assets/og.jpg","isAccessibleForFree":true,"author":{"@type":"Person","@id":"https://alexiermakov.github.io/alexie/#author","name":"Лёша Е.","url":"https://alexiermakov.github.io/alexie/","image":"https://alexiermakov.github.io/alexie/assets/photo.jpg"},"isPartOf":{"@id":"https://alexiermakov.github.io/alexie/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Лёша Е.","item":"https://alexiermakov.github.io/alexie/"},{"@type":"ListItem","position":2,"name":"Корпоратив","item":"https://alexiermakov.github.io/alexie/stories/korporativ/"}]}]}</script>
 </head>
 <body id="top">
@@ -33,7 +36,7 @@
   <a href="../../" class="name">Лёша Е.</a>
   <a href="../../#index">Рассказы</a>
   <span class="mute">Короткая проза</span>
-  <span class="mute">2026</span>
+  <button class="theme-toggle" type="button">Тёмная тема</button>
 </header>
 
 <main>

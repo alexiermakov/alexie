@@ -84,13 +84,16 @@ def head(title, description, path, prefix, og_type, schema):
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#f5f4f0">
+<meta name="theme-color" content="#f0f0ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<script>try {{ const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
 <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{prefix}assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="{FONTS}" rel="stylesheet">
 <link rel="stylesheet" href="{prefix}assets/style.css">
+<script src="{prefix}assets/theme.js" defer></script>
 {ld(schema)}
 </head>'''
 
@@ -102,7 +105,7 @@ def bar(prefix, is_home):
   {name}
   <a href="{prefix}#index">Рассказы</a>
   <span class="mute">Короткая проза</span>
-  <span class="mute">{YEAR}</span>
+  <button class="theme-toggle" type="button">Тёмная тема</button>
 </header>'''
 
 
@@ -255,13 +258,17 @@ write('404.html', f'''<!doctype html>
 <link rel="icon" href="{SITE}/favicon.svg" type="image/svg+xml">
 <link href="{FONTS}" rel="stylesheet">
 <link rel="stylesheet" href="{SITE}/assets/style.css">
+<meta name="theme-color" content="#f0f0ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<script>try {{ const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
+<script src="{SITE}/assets/theme.js" defer></script>
 </head>
 <body>
 <header class="bar">
   <a href="{SITE}/" class="name">{AUTHOR}</a>
   <a href="{SITE}/#index">Рассказы</a>
   <span class="mute">Короткая проза</span>
-  <span class="mute">{YEAR}</span>
+  <button class="theme-toggle" type="button">Тёмная тема</button>
 </header>
 <main class="notfound">
   <p class="mute">404</p>
