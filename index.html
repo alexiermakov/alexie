@@ -53,6 +53,19 @@
       </p>
     </div>
   </section>
+  <script>
+    // Случайное фото при каждой загрузке, не повторяя прошлое.
+    (() => {
+      const imgs = document.querySelectorAll('img.swap');
+      const n = imgs[0].dataset.photos.split(' ').length;
+      let last = -1;
+      try { last = parseInt(localStorage.getItem('photo'), 10); } catch (e) {}
+      let i = Math.floor(Math.random() * (last >= 0 && last < n ? n - 1 : n));
+      if (last >= 0 && last < n && i >= last) i++;
+      imgs.forEach(img => { img.src = img.dataset.photos.split(' ')[i]; img.dataset.index = i; });
+      try { localStorage.setItem('photo', i); } catch (e) {}
+    })();
+  </script>
 
 </main>
 

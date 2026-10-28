@@ -7,11 +7,12 @@
   };
 
   // ---------- фото ----------
-  // Каждые STEP пикселей пути курсора показываем следующее фото; на тач-экранах — по тапу.
+  // Каждые STEP пикселей пути курсора показываем следующее фото; по клику и тапу — тоже.
+  // Стартовое фото случайное, его выбирает встроенный скрипт сразу после разметки.
   const STEP = 70;
   document.querySelectorAll('img.swap').forEach(img => {
     const photos = img.dataset.photos.split(' ');
-    let index = 0, path = 0, last = null, loaded = false;
+    let index = +img.dataset.index || 0, path = 0, last = null, loaded = false;
     const next = () => { index = (index + 1) % photos.length; img.src = photos[index]; };
     img.addEventListener('pointerenter', () => {
       if (!loaded) { photos.forEach(src => { new Image().src = src; }); loaded = true; }
@@ -23,7 +24,7 @@
       last = { x: e.clientX, y: e.clientY };
       if (path >= STEP) { path = 0; next(); }
     });
-    img.addEventListener('click', e => { if (e.pointerType !== 'mouse') next(); });
+    img.addEventListener('click', next);
   });
 
   // ---------- размытие ----------
