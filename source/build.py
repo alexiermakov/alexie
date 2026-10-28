@@ -163,9 +163,10 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
 BLUR_DEPTH, BLUR_AMOUNT = 0.22, 0.075  # как на главной по умолчанию
 
 
-def title_html(n, title):
+def title_html(n, title, comma):
     """Название по буквам: у последних букв задано размытие --b, оно включается при наведении.
-    Слова не разрываются, номер склеен с первым словом."""
+    Слова не разрываются, номер склеен с первым словом, а запятая — с последним,
+    чтобы она не уезжала на новую строку."""
     chars = list(title)
     last = max(1, len(chars) - 1)
     words, word = [], ''
@@ -177,14 +178,14 @@ def title_html(n, title):
         k = max(0.0, (i / last - (1 - BLUR_DEPTH)) / BLUR_DEPTH)
         blur = k ** 1.6 * BLUR_AMOUNT
         word += f'<span class="ch" style="--b:{blur:.3f}em">{escape(ch)}</span>' if blur > 0 else escape(ch)
-    words.append(word)
+    words.append(word + (',' if comma else ''))
     words = [f'<span class="w">{w}</span>' for w in words]
-    words[0] = f'<span class="toc-lead"><span class="toc-num">{n:02d}.</span> {words[0]}</span>'
+    words[0] = f'<span class="toc-lead"><span class="toc-num">{n:02d}.</span>\u00a0{words[0]}</span>'
     return ' '.join(words)
 
 
-toc = ',\n'.join(f"""    <a href="{s['slug']}/" title="{escape(s['synopsis'])}" aria-label="{s['n']:02d}. {escape(s['title'])}">"""
-                  f"""{title_html(s['n'], s['title'])}</a>"""
+toc = '\n'.join(f"""    <a href="{s['slug']}/" title="{escape(s['synopsis'])}" aria-label="{s['n']:02d}. {escape(s['title'])}">"""
+                  f"""{title_html(s['n'], s['title'], s is not stories[-1])}</a>"""
                   for s in stories)
 
 list_schema = {'@context': 'https://schema.org', '@graph': [
