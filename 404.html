@@ -6,24 +6,18 @@
 <title>Страница не найдена — Лёша Е.</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="https://alexiermakov.github.io/alexie/favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://alexiermakov.github.io/alexie/assets/style.css">
 <meta name="theme-color" content="#f0f0ef" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-<script>try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
-<script src="https://alexiermakov.github.io/alexie/assets/theme.js" defer></script>
+<script>try { const s = JSON.parse(localStorage.getItem('settings') || '{}'), r = document.documentElement; if (s.theme && s.theme !== 'auto') r.dataset.theme = s.theme; if (s.layout) r.dataset.layout = s.layout; const v = { accent: '--accent', scale: '--scale', lh: '--big-lh', listSize: '--list-size', listLh: '--list-lh', listAlign: '--list-align', readLh: '--read-lh' }; for (const k in v) if (s[k] != null) r.style.setProperty(v[k], s[k]); } catch (e) {}</script>
+<script src="https://alexiermakov.github.io/alexie/assets/settings.js" defer></script>
 </head>
 <body>
-<header class="bar">
-  <a href="https://alexiermakov.github.io/alexie/" class="name">Лёша Е.</a>
-  <a href="https://alexiermakov.github.io/alexie/#index">Рассказы</a>
-  <span class="mute">Короткая проза</span>
-  <button class="theme-toggle" type="button">Тёмная тема</button>
-</header>
 <main class="notfound">
   <p class="mute">404</p>
   <h1>Ни в коем случае не касайся этой страницы</h1>
-  <a href="https://alexiermakov.github.io/alexie/">Вернуться к рассказам</a>
+  <a href="https://alexiermakov.github.io/alexie/stories/">Вернуться к рассказам</a>
 </main>
 </body>
 </html>
