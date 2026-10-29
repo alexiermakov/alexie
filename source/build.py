@@ -122,7 +122,7 @@ def head(title, description, path, prefix, og_type, schema, extra=''):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="{FONTS}" rel="stylesheet">{extra}
-<link rel="preload" href="{prefix}assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{prefix}assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>{'' if prefix != '../../' else chr(10) + '<link rel="preload" href="../../assets/fonts/evenmono-regular.otf" as="font" type="font/otf" crossorigin>'}
 <link rel="stylesheet" href="{prefix}assets/style.css">
 <script src="{prefix}assets/settings.js" defer></script>
 {ld(schema)}
@@ -297,9 +297,14 @@ for i, s in enumerate(stories):
             glyph = rnd.choice([g for g in SEPARATORS if g != glyph])
             blocks.append(f'      <div class="sep" role="separator"><span aria-hidden="true">{glyph}</span></div>')
             continue
+        pull = f'«{escape(s["quote"].rstrip("."))}»'
+        if i == quoted and p.strip(' «».') == s['quote'].strip(' «».'):
+            # Абзац — это и есть цитата: показываем только выделенную версию, без повтора.
+            blocks.append(f'      <blockquote class="pull">{pull}</blockquote>')
+            continue
         blocks.append(f'      <p class="lead">{escape(p)}</p>' if i == 0 else f'      <p>{escape(p)}</p>')
         if i == quoted:
-            blocks.append(f'      <blockquote class="pull" aria-hidden="true">«{escape(s["quote"].rstrip("."))}»</blockquote>')
+            blocks.append(f'      <blockquote class="pull" aria-hidden="true">{pull}</blockquote>')
     body = '\n'.join(blocks)
     write(f"stories/{s['slug']}/index.html", head(title, clip(s['synopsis']), path, '../../', 'article', schema)
           + f'''
