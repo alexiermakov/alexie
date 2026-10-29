@@ -179,8 +179,8 @@ BLUR_DEPTH, BLUR_AMOUNT = 0.22, 0.075  # как на главной по умо�
 def title_html(n, title, comma):
     """Название по буквам: у последних букв задано размытие --b, оно включается при наведении.
     Слова не разрываются, номер склеен с первым словом, а запятая — с последним,
-    чтобы она не уезжала на новую строку."""
-    chars = list(title)
+    чтобы она не уезжала на новую строку; размывается вместе с буквами."""
+    chars = list(title + (',' if comma else ''))
     last = max(1, len(chars) - 1)
     words, word = [], ''
     for i, ch in enumerate(chars):
@@ -191,7 +191,7 @@ def title_html(n, title, comma):
         k = max(0.0, (i / last - (1 - BLUR_DEPTH)) / BLUR_DEPTH)
         blur = k ** 1.6 * BLUR_AMOUNT
         word += f'<span class="ch" style="--b:{blur:.3f}em">{escape(ch)}</span>' if blur > 0 else escape(ch)
-    words.append(word + (',' if comma else ''))
+    words.append(word)
     words = [f'<span class="w">{w}</span>' for w in words]
     words[0] = f'<span class="toc-lead"><span class="toc-num">{n:02d}.</span>\u00a0{words[0]}</span>'
     return ' '.join(words)
@@ -224,10 +224,10 @@ write('stories/index.html', head(f'Рассказы — {AUTHOR}', clip(list_des
   <p class="toc-list">
 {toc}
   </p>
-  <a class="toc-back" href="../" aria-label="На главную">
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
-      <circle cx="32" cy="32" r="29"/>
-      <path d="M45 32H20M30 21 19 32l11 11"/>
+  <a class="round-btn" href="../" aria-label="На главную">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="32" fill="currentColor"/>
+      <path d="M32 21.5 42 30v11.5H22V30z" fill="var(--paper)"/>
     </svg>
   </a>
 </main>
@@ -254,22 +254,28 @@ for i, s in enumerate(stories):
             {'@type': 'ListItem', 'position': 2, 'name': 'Рассказы', 'item': SITE + '/stories/'},
             {'@type': 'ListItem', 'position': 3, 'name': s['title'], 'item': SITE + path}]},
     ]}
-    body = '\n'.join(f'      <p>{escape(p)}</p>' for p in s['paras'])
+    # Первый абзац — крупный лид; после абзаца с цитатой из config.json — выносная цитата.
+    quoted = next(i for i, p in enumerate(s['paras']) if s['quote'] in p)
+    blocks = []
+    for i, p in enumerate(s['paras']):
+        blocks.append(f'      <p class="lead">{escape(p)}</p>' if i == 0 else f'      <p>{escape(p)}</p>')
+        if i == quoted:
+            blocks.append(f'      <blockquote class="pull" aria-hidden="true">«{escape(s["quote"].rstrip("."))}»</blockquote>')
+    body = '\n'.join(blocks)
     write(f"stories/{s['slug']}/index.html", head(title, clip(s['synopsis']), path, '../../', 'article', schema)
           + f'''
-<body id="top">
+<body id="top" class="read-page">
 <div class="progress" id="progress"></div>
 
 <main>
   <article class="reader">
     <aside class="meta">
-      <div class="num">{s['n']:02d}.</div>
+      <div class="num">{s['n']:02d}</div>
       <dl>
         <dt>Жанр</dt><dd>{s['genre']}</dd>
         <dt>Объём</dt><dd>{thousands(s['words'])} {plural(s['words'], 'слово', 'слова', 'слов')}</dd>
         <dt>Чтение</dt><dd>{minutes(s['words'])} мин</dd>
       </dl>
-      <a href="../" class="back">← Все рассказы</a>
     </aside>
     <div class="text">
       <h1>{escape(s['title'])}</h1>
@@ -278,6 +284,12 @@ for i, s in enumerate(stories):
       <p class="end">Конец</p>
     </div>
   </article>
+  <a class="round-btn round-btn-left" href="../" aria-label="Все рассказы">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="32" fill="currentColor"/>
+      <path d="M19 32 31 20v8h14v8H31v8z" fill="var(--paper)"/>
+    </svg>
+  </a>
   <nav class="next" aria-label="Следующий рассказ"><a href="../{nx['slug']}/"><span class="label">Следующий рассказ</span><span class="title">{escape(nx['title'])}</span></a></nav>
 </main>
 
