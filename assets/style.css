@@ -188,7 +188,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .next a { grid-column: 2; display: block; }
 .next .label { color: var(--mute); display: block; margin-bottom: 6px; }
-.next .title { font: 400 clamp(26px, 3vw, 40px)/1.1 var(--display); }
+.next .title { font: 600 clamp(32px, 4.6vw, 76px)/var(--big-lh, 0.79) var(--sans); letter-spacing: -0.055em; display: block; padding-top: 0.04em; }
 .next a:hover .title { color: var(--accent); }
 
 [hidden] { display: none !important; }
@@ -393,3 +393,6 @@ body::before {
 }
 /* На странице рассказа весь текст — основного цвета, без серого. */
 .read-page .byline, .read-page .meta dt, .read-page .end, .read-page .next .label { color: var(--ink); }
+
+/* Разбивка между частями рассказа: символ по центру колонки. */
+.text .sep { text-align: center; font: 400 calc(30px * var(--scale)) / 1 var(--sans); color: var(--ink); margin: 1.4em 0 1.5em; }

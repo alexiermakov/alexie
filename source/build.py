@@ -4,6 +4,8 @@
 """
 import json
 import os
+import random
+import re
 from html import escape
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,6 +15,35 @@ cfg = json.load(open(os.path.join(SRC, 'config.json'), encoding='utf-8'))
 stories = json.load(open(os.path.join(SRC, 'stories.json'), encoding='utf-8'))
 for s, meta in zip(stories, cfg['stories']):
     s.update(meta)
+
+# ---------- типографика ----------
+NBSP = '\u00a0'
+# Короткие слова, которые не должны висеть в конце строки: всё длиной до двух букв
+# (кроме частиц — они прилипают назад) плюс трёхбуквенные предлоги и союзы.
+HANGING = re.compile(r'(?<![\w-])(?!(?:же|ли|ль|бы)(?![\w-]))(\w{1,2}|без|для|над|под|при|про|обо|изо|ото|меж|что|как|или)\s+(?=\S)',
+                     re.IGNORECASE)
+# Частицы прилипают к предыдущему слову.
+PARTICLES = re.compile(r'\s+(же|ли|ль|бы|б)(?![\w-])', re.IGNORECASE)
+
+
+def typo(text):
+    """Неразрывные пробелы: после коротких слов, перед частицами и тире, между числом и словом."""
+    text = re.sub(r'\s+—', NBSP + '—', text)
+    text = re.sub(r'(\d)\s+(?=[^\W\d])', r'\1' + NBSP, text)
+    text = PARTICLES.sub(lambda m: NBSP + m.group(1), text)
+    prev = None
+    while prev != text:  # повторяем, чтобы склеить цепочки вроде «и в»
+        prev = text
+        text = HANGING.sub(lambda m: m.group(1) + NBSP, text)
+    return text
+
+
+for s in stories:
+    s['paras'] = [typo(p) for p in s['paras']]
+    for key in ('title', 'synopsis', 'quote'):
+        s[key] = typo(s[key])
+for key in ('about', 'tagline'):
+    cfg[key] = typo(cfg[key])
 
 SITE = cfg['site_url'].rstrip('/')
 AUTHOR = cfg['author']
@@ -238,6 +269,8 @@ write('stories/index.html', head(f'Рассказы — {AUTHOR}', clip(list_des
 """)
 
 # ---------- stories ----------
+SEPARATORS = ['✱', '†', '§', '⁂', '‡', '❋', '※', '✳']
+
 for i, s in enumerate(stories):
     nx = stories[(i + 1) % len(stories)]
     path = f"/stories/{s['slug']}/"
@@ -256,8 +289,14 @@ for i, s in enumerate(stories):
     ]}
     # Первый абзац — крупный лид; после абзаца с цитатой из config.json — выносная цитата.
     quoted = next(i for i, p in enumerate(s['paras']) if s['quote'] in p)
+    # «***» в тексте — разбивка: по центру, каждый раз другой символ (выбор стабилен между сборками).
+    rnd, glyph = random.Random(s['slug']), None
     blocks = []
     for i, p in enumerate(s['paras']):
+        if p.strip() == '***':
+            glyph = rnd.choice([g for g in SEPARATORS if g != glyph])
+            blocks.append(f'      <div class="sep" role="separator"><span aria-hidden="true">{glyph}</span></div>')
+            continue
         blocks.append(f'      <p class="lead">{escape(p)}</p>' if i == 0 else f'      <p>{escape(p)}</p>')
         if i == quoted:
             blocks.append(f'      <blockquote class="pull" aria-hidden="true">«{escape(s["quote"].rstrip("."))}»</blockquote>')
