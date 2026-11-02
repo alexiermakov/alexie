@@ -125,6 +125,7 @@ def head(title, description, path, prefix, og_type, schema, extra=''):
 <link rel="preload" href="{prefix}assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{prefix}assets/style.css">
 <script src="{prefix}assets/settings.js" defer></script>
+<script src="{prefix}assets/magnet.js" defer></script>
 {ld(schema)}
 </head>'''
 
@@ -256,7 +257,24 @@ write('stories/index.html', head(f'Рассказы — {AUTHOR}', clip(list_des
     </svg>
   </a>
 </main>
-
+<script>
+  // Построчное появление: слова одной строки получают одинаковую задержку,
+  // строки проявляются по очереди из размытия, кнопка «домой» — последней.
+  (() => {{
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const units = [...document.querySelectorAll('.toc-list .toc-lead, .toc-list .w')]
+      .filter(el => !el.closest('.toc-lead') || el.classList.contains('toc-lead'));
+    const STEP = 0.12;
+    let line = -1, top = null;
+    units.forEach(el => {{
+      const t = el.getBoundingClientRect().top;
+      if (top === null || t > top + 4) {{ line++; top = t; }}
+      el.style.setProperty('--d', (line * STEP).toFixed(2) + 's');
+    }});
+    document.querySelector('.round-btn').style.setProperty('--d', ((line + 1) * STEP + 0.35).toFixed(2) + 's');
+    document.documentElement.classList.add('reveal');
+  }})();
+</script>
 </body>
 </html>
 """)

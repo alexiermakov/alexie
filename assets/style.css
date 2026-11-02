@@ -329,10 +329,10 @@ body > main { flex: 1 0 auto; }
   position: fixed; left: 50%; bottom: var(--gutter); z-index: 15;
   width: 64px; height: 64px; margin-left: -32px;
   color: var(--ink);
+  will-change: transform;
 }
-.round-btn svg { width: 100%; height: 100%; display: block; overflow: visible; transition: filter .35s ease; }
+.round-btn svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .round-btn:hover, .round-btn:focus-visible { color: var(--red); }
-.round-btn:hover svg, .round-btn:focus-visible svg { filter: blur(3px); }
 .toc { padding-bottom: 160px; }
 .next { padding-bottom: 140px; }
 .round-btn-left { left: var(--gutter); margin-left: 0; }
@@ -388,3 +388,12 @@ body::before {
 /* Градиент текста на главной (вид 2): цвет каждой буквы выставляет home-b.js. */
 /* При наведении ссылка подсвечивается основным цветом (в тёмной теме — белым). */
 .hero-b .big a:hover .gc, .hero-b .big a:hover .ch { color: var(--ink) !important; }
+
+/* Построчное появление на странице «Рассказы» (задержки ставит встроенный скрипт). */
+.reveal .toc-list .toc-lead, .reveal .toc-list .w { display: inline-block; }
+.reveal .toc-list .toc-lead, .reveal .toc-list .w {
+  animation: line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s) backwards;
+}
+.reveal .round-btn { animation: btn-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s) backwards; }
+@keyframes line-in { from { opacity: 0; filter: blur(14px); translate: 0 0.25em; } }
+@keyframes btn-in  { from { opacity: 0; filter: blur(10px); scale: 0.6; } }

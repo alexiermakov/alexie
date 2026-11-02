@@ -29,6 +29,7 @@
 <link rel="preload" href="../assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/style.css">
 <script src="../assets/settings.js" defer></script>
+<script src="../assets/magnet.js" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Рассказы","url":"https://alexiermakov.github.io/alexie/stories/","inLanguage":"ru","isPartOf":{"@id":"https://alexiermakov.github.io/alexie/#website"},"author":{"@id":"https://alexiermakov.github.io/alexie/#author"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"url":"https://alexiermakov.github.io/alexie/stories/ne-kasaysya-zemli/","name":"Ни в коем случае не касайся земли"},{"@type":"ListItem","position":2,"url":"https://alexiermakov.github.io/alexie/stories/dolgiy-zakat/","name":"Долгий закат"},{"@type":"ListItem","position":3,"url":"https://alexiermakov.github.io/alexie/stories/skrezhet/","name":"Скрежет"},{"@type":"ListItem","position":4,"url":"https://alexiermakov.github.io/alexie/stories/aviarezhim/","name":"Авиарежим"},{"@type":"ListItem","position":5,"url":"https://alexiermakov.github.io/alexie/stories/ostavte-otzyv/","name":"Оставьте отзыв"},{"@type":"ListItem","position":6,"url":"https://alexiermakov.github.io/alexie/stories/korporativ/","name":"Корпоратив"}]}},{"@type":"Person","@id":"https://alexiermakov.github.io/alexie/#author","name":"Лёша Е.","url":"https://alexiermakov.github.io/alexie/","image":"https://alexiermakov.github.io/alexie/assets/photo.jpg"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Лёша Е.","item":"https://alexiermakov.github.io/alexie/"},{"@type":"ListItem","position":2,"name":"Рассказы","item":"https://alexiermakov.github.io/alexie/stories/"}]}]}</script>
 </head>
 <body id="top" class="list-page">
@@ -50,6 +51,23 @@
     </svg>
   </a>
 </main>
-
+<script>
+  // Построчное появление: слова одной строки получают одинаковую задержку,
+  // строки проявляются по очереди из размытия, кнопка «домой» — последней.
+  (() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const units = [...document.querySelectorAll('.toc-list .toc-lead, .toc-list .w')]
+      .filter(el => !el.closest('.toc-lead') || el.classList.contains('toc-lead'));
+    const STEP = 0.12;
+    let line = -1, top = null;
+    units.forEach(el => {
+      const t = el.getBoundingClientRect().top;
+      if (top === null || t > top + 4) { line++; top = t; }
+      el.style.setProperty('--d', (line * STEP).toFixed(2) + 's');
+    });
+    document.querySelector('.round-btn').style.setProperty('--d', ((line + 1) * STEP + 0.35).toFixed(2) + 's');
+    document.documentElement.classList.add('reveal');
+  })();
+</script>
 </body>
 </html>
