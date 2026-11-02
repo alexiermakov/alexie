@@ -242,7 +242,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .meta dl { display: none; }
   .text p { font-size: calc(18px * var(--scale)); }
   .text .byline { margin-bottom: 40px; }
-  .text h1 { margin-right: 0; font-size: 10.4vw; }
+  .text h1 { margin-right: 0; font-size: calc(18px * var(--scale) * 3); line-height: calc(var(--big-lh, 0.79) * 0.99); } /* как цитата; межстрочное +10% */
   .next { grid-template-columns: 1fr; }
   .next a { grid-column: 1; }
 }
