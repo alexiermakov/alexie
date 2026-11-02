@@ -306,48 +306,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .about { font-size: 12px; }
 }
 
-/* ---------- settings panel ---------- */
-/* Кнопка в том же стиле, что стрелка «назад»: круг-обводка той же толщины (4px при 64px), острые концы. */
-.settings-toggle {
-  position: fixed; right: var(--gutter); bottom: var(--gutter); z-index: 20;
-  width: 52px; height: 52px; border-radius: 50%;
-  display: block; padding: 0;
-  background: var(--paper); color: var(--ink);
-}
-.settings-toggle svg { width: 100%; height: 100%; display: block; overflow: visible; transition: filter .35s ease; }
-.settings-toggle:hover, .settings-toggle[aria-expanded="true"] { color: var(--accent); }
-.settings-toggle:hover svg { filter: blur(2px); }
-.settings-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.settings-panel {
-  position: fixed; right: var(--gutter); bottom: calc(var(--gutter) + 60px); z-index: 20;
-  border-radius: 14px;
-  transform-origin: 100% 100%;
-  animation: bubble-in .18s ease-out;
-  width: min(300px, calc(100vw - 2 * var(--gutter)));
-  padding: 14px 16px 12px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  box-shadow: 0 12px 40px rgb(0 0 0 / 0.12);
-  display: grid; gap: 12px;
-}
-.set-row { display: grid; gap: 6px; }
-.set-label { color: var(--mute); }
-.set-options { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
-.set-options button { color: var(--mute); padding: 2px 0; }
-.set-options button:hover { color: var(--ink); }
-.set-options button[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-.set-options .swatch {
-  width: 18px; height: 18px; border-radius: 50%; background: var(--c); padding: 0;
-  outline: 1px solid transparent; outline-offset: 2px;
-}
-.set-options .swatch[aria-pressed="true"] { outline-color: var(--ink); text-decoration: none; }
-.set-reset { justify-self: start; color: var(--mute); border-bottom: 1px solid currentColor; }
-.set-reset:hover { color: var(--accent); }
-
-/* footer sits at the bottom of short pages */
+/* content fills the window height */
 body { min-height: 100svh; display: flex; flex-direction: column; }
 body > main { flex: 1 0 auto; }
-@keyframes bubble-in { from { opacity: 0; transform: scale(.92) translateY(6px); } }
 
 /* home: all text in red */
 .home main, .home .mute { color: var(--red); }
@@ -355,16 +316,6 @@ body > main { flex: 1 0 auto; }
 
 /* photo swaps while the pointer moves over it */
 .swap { cursor: crosshair; }
-
-/* range sliders in the settings panel */
-.set-row input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
-.set-label output { float: right; color: var(--ink); font-variant-numeric: tabular-nums; }
-.set-tabs { display: flex; gap: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
-.set-tabs button { color: var(--mute); padding: 2px 0; }
-.set-tabs button:hover { color: var(--ink); }
-.set-tabs button[aria-selected="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-.set-page { display: grid; gap: 12px; }
-.set-common { display: grid; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
 
 /* Круглые кнопки «на главную» и «все рассказы»: сплошной круг цвета текста,
    иконка цвета фона; прижаты к низу экрана по центру, на одной высоте. */

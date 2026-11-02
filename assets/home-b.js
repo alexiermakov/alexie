@@ -2,9 +2,6 @@
 // и размытый правый конец крупных строк.
 (() => {
   const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  const settings = () => {
-    try { return JSON.parse(localStorage.getItem('settings') || '{}'); } catch (e) { return {}; }
-  };
 
   // ---------- фото ----------
   // Каждые STEP пикселей пути курсора по фото или ниже его нижнего края показываем
@@ -58,12 +55,7 @@
     }).join('');
     el.innerHTML = `<span class="edge-sr">${esc(text)}</span><span aria-hidden="true">${html}</span>`;
   };
-  const renderBlur = () => {
-    const s = settings();
-    const depth = s.blurDepth != null ? +s.blurDepth : DEPTH;
-    const amount = s.blurAmount != null ? +s.blurAmount : AMOUNT;
-    lines.forEach(el => blurEdges(el, depth, amount));
-  };
+  const renderBlur = () => lines.forEach(el => blurEdges(el, DEPTH, AMOUNT));
 
   // ---------- градиент ----------
   // Диагональный градиент #FF3D20 → #FFD3CC: от начала текста обо мне (сверху слева) к правому
@@ -98,7 +90,6 @@
   };
 
   renderBlur();
-  addEventListener('settingschange', () => { renderBlur(); paintGradient(); });
   document.fonts.ready.then(paintGradient);
   addEventListener('resize', paintGradient);
 

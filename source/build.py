@@ -2,6 +2,8 @@
 
 Запуск из корня репозитория:  python3 source/build.py
 """
+import base64
+import hashlib
 import json
 import os
 import random
@@ -47,6 +49,8 @@ for key in ('about', 'tagline'):
 
 SITE = cfg['site_url'].rstrip('/')
 AUTHOR = cfg['author']
+# Настоящее имя — только в служебной разметке для поисковиков, на страницах его нет.
+AUTHOR_REAL = cfg['author_real']
 AUTHOR_GEN = cfg['author_genitive']
 YEAR = cfg['year']
 FONTS = 'https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap'
@@ -81,7 +85,7 @@ def ld(data):
             + '</script>')
 
 
-PERSON = {'@type': 'Person', '@id': SITE + '/#author', 'name': AUTHOR, 'url': SITE + '/',
+PERSON = {'@type': 'Person', '@id': SITE + '/#author', 'name': AUTHOR, 'alternateName': AUTHOR_REAL, 'url': SITE + '/',
           'image': SITE + '/assets/photo.jpg'}
 WEBSITE = {'@type': 'WebSite', '@id': SITE + '/#website', 'name': f'{AUTHOR} — рассказы',
            'url': SITE + '/', 'inLanguage': 'ru', 'author': {'@id': SITE + '/#author'}}
@@ -101,7 +105,7 @@ def head(title, description, path, prefix, og_type, schema, extra=''):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escape(title)}</title>
 <meta name="description" content="{escape(description)}">
-<meta name="author" content="{escape(AUTHOR)}">
+<meta name="author" content="{escape(AUTHOR_REAL)}">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="{url}">{verify}
 <meta property="og:type" content="{og_type}">
@@ -116,7 +120,6 @@ def head(title, description, path, prefix, og_type, schema, extra=''):
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f0f0ef" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-<script>try {{ const s = JSON.parse(localStorage.getItem('settings') || '{{}}'), r = document.documentElement; if (s.theme && s.theme !== 'auto') r.dataset.theme = s.theme; if (s.layout) r.dataset.layout = s.layout; const v = {{ accent: '--accent', scale: '--scale', lh: '--big-lh', listSize: '--list-size', listLh: '--list-lh', listAlign: '--list-align', readLh: '--read-lh' }}; for (const k in v) if (s[k] != null) r.style.setProperty(v[k], s[k]); }} catch (e) {{}}</script>
 <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{prefix}assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -124,13 +127,34 @@ def head(title, description, path, prefix, og_type, schema, extra=''):
 <link href="{FONTS}" rel="stylesheet">{extra}
 <link rel="preload" href="{prefix}assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{prefix}assets/style.css">
-<script src="{prefix}assets/settings.js" defer></script>
 <script src="{prefix}assets/magnet.js" defer></script>
 {ld(schema)}
 </head>'''
 
 
+# ---------- безопасность ----------
+# Политика безопасности (CSP): страница может загружать скрипты только с самого сайта и
+# свои встроенные скрипты (по их хешам), шрифты — только с сайта и Google Fonts, ничего не
+# отправлять формами и не встраиваться в чужой <base>. Внедрённый чужой код не выполнится.
+def secure(html):
+    if '<head>' not in html:
+        return html
+    inline = re.findall(r'<script>(.*?)</script>', html, re.S)
+    hashes = ' '.join("'sha256-" + base64.b64encode(hashlib.sha256(code.encode('utf-8')).digest()).decode() + "'"
+                      for code in inline)
+    policy = ("default-src 'self'; "
+              f"script-src 'self' {hashes}; ".replace('  ', ' ') +
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+              "font-src 'self' https://fonts.gstatic.com; "
+              "img-src 'self' data:; connect-src 'self'; object-src 'none'; "
+              "base-uri 'self'; form-action 'none'")
+    meta = (f'<meta http-equiv="Content-Security-Policy" content="{policy}">\n'
+            '<meta name="referrer" content="strict-origin-when-cross-origin">\n')
+    return html.replace('<meta charset="utf-8">\n', '<meta charset="utf-8">\n' + meta, 1)
+
+
 def write(path, html):
+    html = secure(html)
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     with open(full, 'w', encoding='utf-8') as f:
@@ -144,7 +168,7 @@ home_schema = {'@context': 'https://schema.org', '@graph': [
         {'@type': 'ListItem', 'position': s['n'], 'url': f"{SITE}/stories/{s['slug']}/", 'name': s['title']}
         for s in stories]},
 ]}
-home_desc = (f'{AUTHOR} — короткая проза. Шесть рассказов: '
+home_desc = (f'{AUTHOR} ({AUTHOR_REAL}) — короткая проза. Шесть рассказов: '
              + ', '.join(f'«{s["title"]}»' for s in stories) + '. Читать онлайн.')
 
 PHOTOS = ' '.join(f'assets/photos/{i}.jpg' for i in range(1, 6))
@@ -400,8 +424,6 @@ write('404.html', f'''<!doctype html>
 <link rel="stylesheet" href="{SITE}/assets/style.css">
 <meta name="theme-color" content="#f0f0ef" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-<script>try {{ const s = JSON.parse(localStorage.getItem('settings') || '{{}}'), r = document.documentElement; if (s.theme && s.theme !== 'auto') r.dataset.theme = s.theme; if (s.layout) r.dataset.layout = s.layout; const v = {{ accent: '--accent', scale: '--scale', lh: '--big-lh', listSize: '--list-size', listLh: '--list-lh', listAlign: '--list-align', readLh: '--read-lh' }}; for (const k in v) if (s[k] != null) r.style.setProperty(v[k], s[k]); }} catch (e) {{}}</script>
-<script src="{SITE}/assets/settings.js" defer></script>
 </head>
 <body>
 <main class="notfound">
