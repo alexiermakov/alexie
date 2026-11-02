@@ -18,7 +18,7 @@ source/                    исходники: тексты, настройки,
 
 1. Создайте репозиторий на GitHub и загрузите в него содержимое этой папки.
 2. Settings → Pages → Source: **Deploy from a branch**, ветка `main`, папка `/ (root)`.
-3. Впишите адрес сайта в `source/config.json` (`site_url`) и пересоберите — см. ниже.
+3. Адрес сайта — `https://alexie.ru` (`site_url` в `source/config.json`, домен в файле `CNAME`).
    Адрес вида `https://ИМЯ.github.io/РЕПОЗИТОРИЙ` или `https://ИМЯ.github.io`,
    если репозиторий называется `ИМЯ.github.io`.
 
