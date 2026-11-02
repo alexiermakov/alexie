@@ -122,18 +122,11 @@ def head(title, description, path, prefix, og_type, schema, extra=''):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="{FONTS}" rel="stylesheet">{extra}
-<link rel="preload" href="{prefix}assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>{'' if prefix != '../../' else chr(10) + '<link rel="preload" href="../../assets/fonts/evenmono-regular.otf" as="font" type="font/otf" crossorigin>'}
+<link rel="preload" href="{prefix}assets/fonts/lebowski-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{prefix}assets/style.css">
 <script src="{prefix}assets/settings.js" defer></script>
 {ld(schema)}
 </head>'''
-
-
-def foot(prefix):
-    return f'''<footer class="foot">
-  <a href="{prefix}">© {YEAR} {AUTHOR}</a>
-  <span>Все права защищены</span>
-</footer>'''
 
 
 def write(path, html):
@@ -165,6 +158,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
     <p class="caps">{escape(cfg['tagline'])}</p>
     <figure class="portrait"><img class="swap" src="assets/photos/1.jpg" data-photos="{PHOTOS}" alt="{AUTHOR}, портрет" width="900" height="1200"></figure>
     <a href="stories/" class="scroll">Рассказы 01–06 →</a>
+    <a href="blog/" class="scroll">Блог →</a>
   </section>
 
   <section class="hero-b" aria-label="Об авторе">
@@ -174,6 +168,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
       <p class="big">
         <span>{AUTHOR}</span>
         <a class="edge" href="stories/">Рассказы 01–06</a>
+        <a href="blog/">Блог</a>
         <span class="edge">{CITY}</span>
         <time class="clock" data-tz="{cfg['timezone']}" aria-label="Время в Петербурге">--:--:--</time>
       </p>
@@ -195,7 +190,6 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
 
 </main>
 
-{foot('')}
 
 <script src="assets/home-b.js" defer></script>
 </body>
@@ -263,7 +257,6 @@ write('stories/index.html', head(f'Рассказы — {AUTHOR}', clip(list_des
   </a>
 </main>
 
-{foot('../')}
 </body>
 </html>
 """)
@@ -337,7 +330,6 @@ for i, s in enumerate(stories):
   <nav class="next" aria-label="Следующий рассказ"><a href="../{nx['slug']}/"><span class="label">Следующий рассказ</span><span class="title">{escape(nx['title'])}</span></a></nav>
 </main>
 
-{foot('../../')}
 
 <script>
   const bar = document.getElementById('progress');
@@ -351,6 +343,31 @@ for i, s in enumerate(stories):
 </body>
 </html>
 ''')
+
+# ---------- blog (пока заглушка, не индексируется) ----------
+HOME_BTN = """  <a class="round-btn" href="../" aria-label="На главную">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="32" fill="currentColor"/>
+      <path d="M32 21.5 42 30v11.5H22V30z" fill="var(--paper)"/>
+    </svg>
+  </a>"""
+
+blog_schema = {'@context': 'https://schema.org', '@type': 'Blog', 'name': f'Блог — {AUTHOR}',
+               'url': SITE + '/blog/', 'inLanguage': 'ru', 'author': PERSON}
+write('blog/index.html', head(f'Блог — {AUTHOR}', f'Блог {AUTHOR_GEN}: заметки о текстах и письме.', '/blog/', '../', 'website', blog_schema)
+      .replace('content="index, follow, max-image-preview:large"', 'content="noindex, follow"')
+      + f"""
+<body id="top" class="blog-page">
+
+<main class="toc">
+  <h1 class="toc-list">Блог</h1>
+  <p class="blog-soon">Скоро здесь появятся записи.</p>
+</main>
+
+{HOME_BTN}
+</body>
+</html>
+""")
 
 # ---------- 404 ----------
 write('404.html', f'''<!doctype html>

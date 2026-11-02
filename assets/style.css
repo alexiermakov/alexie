@@ -1,11 +1,4 @@
 @font-face {
-  font-family: "Even Mono";
-  src: url("fonts/evenmono-regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
   font-family: "Lebowski";
   src: url("fonts/lebowski-regular.woff2") format("woff2"),
        url("fonts/lebowski-regular.woff") format("woff");
@@ -23,7 +16,6 @@
   --red: #ff3d1f;
   color-scheme: light;
   --sans: "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --mono: "Even Mono", ui-monospace, Menlo, monospace;
   --display: "Lebowski", "Geist", Georgia, serif;
   --gutter: clamp(16px, 3vw, 40px);
   --scale: 1;
@@ -140,13 +132,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .row-more .read:hover { color: var(--accent); }
 
-.foot {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--gutter);
-  padding: 18px var(--gutter) 24px;
-  color: var(--mute);
-}
 
 /* ---------- reader ---------- */
 .progress {
@@ -180,7 +165,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .text .byline { color: var(--mute); margin-bottom: 64px; }
 .text p {
-  font: 400 calc(16px * var(--scale)) / var(--read-lh, 1.65) var(--mono);
+  font: 400 calc(17px * var(--scale)) / var(--read-lh, 1.65) var(--sans);
   hanging-punctuation: first;
   margin-bottom: 0.9em;
 }
@@ -209,14 +194,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .row .time { font-size: 15px; }
   .row-more { grid-template-columns: 1fr; }
   .row-more p, .row-more .read { grid-column: 1; }
-  .foot { grid-template-columns: 1fr 1fr; row-gap: 4px; }
-  .foot > :nth-child(odd) { text-align: left; }
-  .foot > :nth-child(even) { text-align: right; }
-  .foot { padding-right: calc(var(--gutter) + 60px); }
   .reader { grid-template-columns: 1fr; padding-top: 16px; }
   .meta { position: static; display: flex; justify-content: space-between; align-items: baseline; font-size: calc(18px * var(--scale)); }
   .meta dl { display: none; }
-  .text p { font-size: calc(15px * var(--scale)); }
+  .text p { font-size: calc(18px * var(--scale)); }
   .text .byline { margin-bottom: 40px; }
   .text h1 { margin-right: 0; font-size: 10.4vw; }
   .next { grid-template-columns: 1fr; }
@@ -326,7 +307,7 @@ body > main { flex: 1 0 auto; }
 @keyframes bubble-in { from { opacity: 0; transform: scale(.92) translateY(6px); } }
 
 /* home: all text in red */
-.home main, .home .foot, .home .mute { color: var(--red); }
+.home main, .home .mute { color: var(--red); }
 .home .big a:hover, .home .hero .scroll:hover { color: var(--ink); }
 
 /* photo swaps while the pointer moves over it */
@@ -355,11 +336,6 @@ body > main { flex: 1 0 auto; }
 .toc { padding-bottom: 160px; }
 .next { padding-bottom: 140px; }
 .round-btn-left { left: var(--gutter); margin-left: 0; }
-.read-page .foot { padding-left: calc(var(--gutter) + 80px); }
-@media (max-width: 760px) {
-  .list-page .foot > :nth-child(2), .read-page .foot > :nth-child(2) { display: none; }
-  .foot > :first-child { white-space: nowrap; }
-}
 
 /* Анимированный чёрный шум на фоне (под текстом), едва заметный: одна статичная SVG-текстура 200×200,
    слой просто перескакивает на несколько позиций — это дёшево, без пересчёта фильтра. */
@@ -382,8 +358,8 @@ body::before {
 
 /* Выделения в тексте рассказа: крупный лид и выносная цитата. */
 .text .lead {
-  font: 400 calc(24px * var(--scale)) / 1.2 var(--mono);
-  letter-spacing: -0.02em;
+  font: 500 calc(26px * var(--scale)) / 1.12 var(--sans);
+  letter-spacing: -0.015em;
   color: var(--ink);
   margin-bottom: 1.4em;
 }
@@ -404,3 +380,11 @@ body::before {
 
 /* Разбивка между частями рассказа: символ по центру колонки. */
 .text .sep { text-align: center; font: 400 calc(30px * var(--scale)) / 1 var(--sans); color: var(--ink); margin: 1.4em 0 1.5em; }
+
+/* Блог (заглушка) */
+.blog-soon { margin-top: 24px; font-size: calc(17px * var(--scale)); color: var(--ink); }
+.hero .scroll + .scroll { margin-top: -16px; }
+
+/* Градиент текста на главной (вид 2): цвет каждой буквы выставляет home-b.js. */
+/* При наведении ссылка подсвечивается основным цветом (в тёмной теме — белым). */
+.hero-b .big a:hover .gc, .hero-b .big a:hover .ch { color: var(--ink) !important; }
