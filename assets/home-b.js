@@ -8,33 +8,63 @@
   // следующее фото (над текстом — нет);
   // по клику и тапу на фото — тоже. Стартовое фото случайное, его выбирает встроенный
   // скрипт сразу после разметки. Оба вида главной показывают одно и то же фото.
+  // Видео из списка показывается тем же блоком: рядом с каждым фото лежит скрытый <video>.
   const STEP = 70;
   const imgs = [...document.querySelectorAll('img.swap')];
   if (imgs.length) {
     const photos = imgs[0].dataset.photos.split(' ');
     let index = +imgs[0].dataset.index || 0, path = 0, last = null, loaded = false;
-    const next = () => {
-      index = (index + 1) % photos.length;
-      imgs.forEach(img => { img.src = photos[index]; });
+    const vids = imgs.map(img => {
+      const v = document.createElement('video');
+      v.className = img.className;
+      v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+      v.setAttribute('aria-hidden', 'true');
+      v.hidden = true;
+      img.after(v);
+      return v;
+    });
+    // Пока видео загружается, на его месте стоит кадр-обложка (имя-poster.jpg);
+    // само видео подменяет обложку, когда его можно проиграть без остановок.
+    const poster = src => src.replace(/\.mp4$/, '-poster.jpg');
+    const show = i => {
+      const src = photos[i], isVideo = src.endsWith('.mp4');
+      imgs.forEach((img, k) => {
+        const v = vids[k];
+        if (isVideo) {
+          img.hidden = false; v.hidden = true;
+          img.src = poster(src);
+          const reveal = () => {
+            if (photos[index] !== src) return;   // уже переключили дальше
+            img.hidden = true; v.hidden = false;
+            if (v.offsetParent) v.play().catch(() => {});
+          };
+          if (v.getAttribute('src') !== src) { v.poster = poster(src); v.src = src; v.preload = 'auto'; v.load(); }
+          if (v.readyState >= 4) reveal(); else v.addEventListener('canplaythrough', reveal, { once: true });
+        } else {
+          v.pause(); v.hidden = true;
+          img.hidden = false; img.src = src;
+        }
+      });
     };
-    // Курсор в «зоне фото»: на самом видимом фото или ниже его нижней границы.
+    const next = () => { index = (index + 1) % photos.length; show(index); };
+    // Курсор в «зоне фото»: на самом видимом фото/видео или ниже его нижней границы.
     const inZone = e => {
-      const img = imgs.find(i => i.offsetParent);
-      if (!img) return false;
-      const r = img.getBoundingClientRect();
+      const media = [...imgs, ...vids].find(el => el.offsetParent);
+      if (!media) return false;
+      const r = media.getBoundingClientRect();
       if (e.target.closest && e.target.closest('.big, .about')) return false;
-      return e.target === img || e.clientY > r.bottom;
+      return e.target === media || e.clientY > r.bottom;
     };
     document.addEventListener('pointermove', e => {
       if (e.pointerType !== 'mouse') return;
       if (!inZone(e)) { last = null; return; }
-      if (!loaded) { photos.forEach(src => { new Image().src = src; }); loaded = true; }
+      if (!loaded) { photos.map(src => src.endsWith('.mp4') ? poster(src) : src).forEach(src => { new Image().src = src; }); loaded = true; }
       if (last) path += Math.hypot(e.clientX - last.x, e.clientY - last.y);
       last = { x: e.clientX, y: e.clientY };
       if (path >= STEP) { path = 0; next(); }
     });
     document.addEventListener('pointerleave', () => { last = null; });
-    imgs.forEach(img => img.addEventListener('click', next));
+    [...imgs, ...vids].forEach(el => el.addEventListener('click', next));
   }
 
   // ---------- размытие ----------

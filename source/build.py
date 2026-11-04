@@ -171,7 +171,8 @@ home_schema = {'@context': 'https://schema.org', '@graph': [
 home_desc = (f'{AUTHOR} ({AUTHOR_REAL}) — короткая проза. Шесть рассказов: '
              + ', '.join(f'«{s["title"]}»' for s in stories) + '. Читать онлайн.')
 
-PHOTOS = ' '.join(f'assets/photos/{i}.jpg' for i in range(1, 6))
+# Фото и видео для смены на главной (видео — .mp4, показывается без звука).
+PHOTOS = ' '.join([f'assets/photos/{i}.jpg' for i in range(1, 6)] + ['assets/photos/6.png', 'assets/photos/7.jpg', 'assets/photos/8.mp4'])
 CITY = escape(cfg['city']).replace('-', '\u2011')  # неразрывный дефис
 write('index.html', head(f'{AUTHOR} — рассказы, короткая проза', clip(home_desc, 200), '/', '', 'website', home_schema)
       + f'''
@@ -200,15 +201,15 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
     </div>
   </section>
   <script>
-    // Случайное фото при каждой загрузке, не повторяя прошлое.
+    // Случайное фото (не видео) при каждой загрузке, не повторяя прошлое.
     (() => {{
       const imgs = document.querySelectorAll('img.swap');
-      const n = imgs[0].dataset.photos.split(' ').length;
+      const list = imgs[0].dataset.photos.split(' ');
       let last = -1;
       try {{ last = parseInt(localStorage.getItem('photo'), 10); }} catch (e) {{}}
-      let i = Math.floor(Math.random() * (last >= 0 && last < n ? n - 1 : n));
-      if (last >= 0 && last < n && i >= last) i++;
-      imgs.forEach(img => {{ img.src = img.dataset.photos.split(' ')[i]; img.dataset.index = i; }});
+      const pics = list.map((src, k) => k).filter(k => !list[k].endsWith('.mp4') && k !== last);
+      const i = pics[Math.floor(Math.random() * pics.length)];
+      imgs.forEach(img => {{ img.src = list[i]; img.dataset.index = i; }});
       try {{ localStorage.setItem('photo', i); }} catch (e) {{}}
     }})();
   </script>
