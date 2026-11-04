@@ -191,7 +191,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
     <div class="hero-b-grid">
       <img class="swap" src="assets/photos/1.jpg" data-photos="{PHOTOS}" alt="{AUTHOR}, портрет" width="900" height="1200">
       <p class="big">
-        <span>{AUTHOR}</span>
+        <a href="about/">{AUTHOR}</a>
         <a class="edge" href="stories/">Рассказы 01–06</a>
         <a href="blog/">Блог</a>
         <span class="edge">{CITY}</span>
@@ -382,8 +382,8 @@ for i, s in enumerate(stories):
 ''')
 
 # ---------- blog (пока заглушка, не индексируется) ----------
-BLOG_NOTE = ('тут совсем скоро будут блог, а может и не будет, я пока не решил ещё как лучше. '
-             'возможно будет просто ссылка на')
+BLOG_NOTE = ('тут совсем скоро будет блог, а может, и не будет, я ещё не решил, как лучше, '
+             'возможно, останется просто ссылка на')
 HOME_BTN = """  <a class="round-btn" href="../" aria-label="На главную">
     <svg viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="32" cy="32" r="32" fill="currentColor"/>
@@ -402,6 +402,25 @@ write('blog/index.html', head(f'Блог — {AUTHOR}', f'Блог {AUTHOR_GEN}:
 <main class="blog">
   <h1 class="visually-hidden">Блог</h1>
   <p class="blog-note">{typo(BLOG_NOTE)}&nbsp;<a href="https://t.me/createrweek" rel="noopener">{typo('тг-канал, кстати, вот он')}</a></p>
+</main>
+
+{HOME_BTN}
+</body>
+</html>
+""")
+
+# ---------- about ----------
+about_schema = {'@context': 'https://schema.org', '@type': 'ProfilePage', 'name': f'Обо мне — {AUTHOR}',
+                'url': SITE + '/about/', 'inLanguage': 'ru', 'mainEntity': PERSON}
+write('about/index.html', head(f'Обо мне — {AUTHOR}', f'{AUTHOR} — писатель из Петербурга. Связаться в Telegram.',
+                               '/about/', '../', 'profile', about_schema, og_image='og-about.jpg')
+      + f"""
+<body id="top" class="blog-page about-page">
+<div class="blog-bg" aria-hidden="true"></div>
+
+<main class="blog">
+  <h1 class="visually-hidden">Обо мне</h1>
+  <p class="blog-note">{typo('если я вам зачем-то нужен,')} <a href="https://t.me/alexiermakov" rel="noopener">пишите сюда</a></p>
 </main>
 
 {HOME_BTN}
@@ -434,7 +453,7 @@ write('404.html', f'''<!doctype html>
 ''')
 
 # ---------- sitemap & robots ----------
-urls = [('/', '1.0'), ('/stories/', '0.9')] + [(f"/stories/{s['slug']}/", '0.8') for s in stories]
+urls = [('/', '1.0'), ('/stories/', '0.9'), ('/about/', '0.6')] + [(f"/stories/{s['slug']}/", '0.8') for s in stories]
 write('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n'
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + ''.join(f'  <url><loc>{SITE}{u}</loc><lastmod>{cfg["updated"]}</lastmod><priority>{p}</priority></url>\n'
