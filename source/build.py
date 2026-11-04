@@ -194,7 +194,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
         <a href="about/">{AUTHOR}</a>
         <a class="edge" href="stories/">Рассказы 01–06</a>
         <a href="blog/">Блог</a>
-        <span class="edge">{CITY}</span>
+        <a class="edge" href="https://www.instagram.com/alexiermakov/" rel="noopener">{CITY}</a>
         <time class="clock" data-tz="{cfg['timezone']}" aria-label="Время в Петербурге">--:--:--</time>
       </p>
     </div>
