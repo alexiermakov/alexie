@@ -91,7 +91,7 @@ WEBSITE = {'@type': 'WebSite', '@id': SITE + '/#website', 'name': f'{AUTHOR} —
            'url': SITE + '/', 'inLanguage': 'ru', 'author': {'@id': SITE + '/#author'}}
 
 
-def head(title, description, path, prefix, og_type, schema, extra=''):
+def head(title, description, path, prefix, og_type, schema, extra='', og_image='og.jpg'):
     url = SITE + path
     verify = ''
     if cfg.get('google_site_verification'):
@@ -114,7 +114,7 @@ def head(title, description, path, prefix, og_type, schema, extra=''):
 <meta property="og:title" content="{escape(title)}">
 <meta property="og:description" content="{escape(description)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE}/assets/og.jpg">
+<meta property="og:image" content="{SITE}/assets/{og_image}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -168,8 +168,7 @@ home_schema = {'@context': 'https://schema.org', '@graph': [
         {'@type': 'ListItem', 'position': s['n'], 'url': f"{SITE}/stories/{s['slug']}/", 'name': s['title']}
         for s in stories]},
 ]}
-home_desc = (f'{AUTHOR} ({AUTHOR_REAL}) — короткая проза. Шесть рассказов: '
-             + ', '.join(f'«{s["title"]}»' for s in stories) + '. Читать онлайн.')
+home_desc = f'{AUTHOR} — писатель из Петербурга, рассказы, короткая проза. Читать онлайн'
 
 # Фото и видео для смены на главной (видео — .mp4, показывается без звука).
 PHOTOS = ' '.join(['assets/photos/8.mp4'] + [f'assets/photos/{i}.jpg' for i in range(1, 6)] + ['assets/photos/6.png', 'assets/photos/7.jpg'])
@@ -305,13 +304,13 @@ SEPARATORS = ['✱', '†', '§', '⁂', '‡', '❋', '※', '✳']
 for i, s in enumerate(stories):
     nx = stories[(i + 1) % len(stories)]
     path = f"/stories/{s['slug']}/"
-    title = f"{s['title']} — рассказ {AUTHOR_GEN} | читать онлайн"
+    title = f"{s['title']} — рассказ {AUTHOR_GEN}"
     schema = {'@context': 'https://schema.org', '@graph': [
         {'@type': 'ShortStory', '@id': SITE + path + '#story', 'name': s['title'], 'headline': s['title'],
          'url': SITE + path, 'description': s['synopsis'], 'genre': s['genre'], 'inLanguage': 'ru',
          'wordCount': s['words'], 'timeRequired': f"PT{minutes(s['words'])}M",
          'datePublished': YEAR, 'dateModified': cfg['updated'],
-         'image': SITE + '/assets/og.jpg', 'isAccessibleForFree': True,
+         'image': SITE + '/assets/og-story.jpg', 'isAccessibleForFree': True,
          'author': PERSON, 'isPartOf': {'@id': SITE + '/#website'}},
         {'@type': 'BreadcrumbList', 'itemListElement': [
             {'@type': 'ListItem', 'position': 1, 'name': AUTHOR, 'item': SITE + '/'},
@@ -337,7 +336,7 @@ for i, s in enumerate(stories):
         if i == quoted:
             blocks.append(f'      <blockquote class="pull" aria-hidden="true">{pull}</blockquote>')
     body = '\n'.join(blocks)
-    write(f"stories/{s['slug']}/index.html", head(title, clip(s['synopsis']), path, '../../', 'article', schema)
+    write(f"stories/{s['slug']}/index.html", head(title, clip(s['synopsis']), path, '../../', 'article', schema, og_image='og-story.jpg')
           + f'''
 <body id="top" class="read-page">
 <div class="progress" id="progress"></div>
