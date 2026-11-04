@@ -375,8 +375,24 @@ body::before {
 /* Разбивка между частями рассказа: символ по центру колонки. */
 .text .sep { text-align: center; font: 400 calc(30px * var(--scale)) / 1 var(--sans); color: var(--ink); margin: 1.4em 0 1.5em; }
 
-/* Блог (заглушка) */
-.blog-soon { margin-top: 24px; font-size: calc(17px * var(--scale)); color: var(--ink); }
+/* Блог (заглушка): текст по центру поверх фото, фото прижато книзу и заполняет экран.
+   Фото затемнено, чтобы белый текст читался; на узких экранах — облегчённая версия. */
+.blog-bg {
+  position: fixed; inset: 0; z-index: -2;
+  background: linear-gradient(rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.55)),
+              url("bg/blog-1800.jpg") center bottom / cover no-repeat #1a1a1a;
+}
+@media (max-width: 760px) {
+  .blog-bg { background-image: linear-gradient(rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.55)), url("bg/blog-1000.jpg"); }
+}
+.blog { display: grid; place-items: center; padding: 24px var(--gutter) 120px; }
+.blog-note {
+  max-width: 30em; text-align: center; color: #fff;
+  font: 400 calc(17px * var(--scale)) / var(--read-lh, 1.65) "Medeo Serif", Georgia, serif;
+  letter-spacing: 0.005em;
+}
+.blog-note a { border-bottom: 1px solid currentColor; }
+.blog-note a:hover { color: var(--red); }
 .hero .scroll + .scroll { margin-top: -16px; }
 
 /* Градиент текста на главной (вид 2): цвет каждой буквы выставляет home-b.js. */

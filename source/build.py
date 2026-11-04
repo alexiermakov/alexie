@@ -383,6 +383,8 @@ for i, s in enumerate(stories):
 ''')
 
 # ---------- blog (пока заглушка, не индексируется) ----------
+BLOG_NOTE = ('тут совсем скоро будут блог, а может и не будет, я пока не решил ещё как лучше. '
+             'возможно будет просто ссылка на')
 HOME_BTN = """  <a class="round-btn" href="../" aria-label="На главную">
     <svg viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="32" cy="32" r="32" fill="currentColor"/>
@@ -396,10 +398,11 @@ write('blog/index.html', head(f'Блог — {AUTHOR}', f'Блог {AUTHOR_GEN}:
       .replace('content="index, follow, max-image-preview:large"', 'content="noindex, follow"')
       + f"""
 <body id="top" class="blog-page">
+<div class="blog-bg" aria-hidden="true"></div>
 
-<main class="toc">
-  <h1 class="toc-list">Блог</h1>
-  <p class="blog-soon">Скоро здесь появятся записи.</p>
+<main class="blog">
+  <h1 class="visually-hidden">Блог</h1>
+  <p class="blog-note">{typo(BLOG_NOTE)}&nbsp;<a href="https://t.me/createrweek" rel="noopener">{typo('тг-канал, кстати, вот он')}</a></p>
 </main>
 
 {HOME_BTN}
