@@ -172,7 +172,7 @@ home_desc = (f'{AUTHOR} ({AUTHOR_REAL}) — короткая проза. Шес�
              + ', '.join(f'«{s["title"]}»' for s in stories) + '. Читать онлайн.')
 
 # Фото и видео для смены на главной (видео — .mp4, показывается без звука).
-PHOTOS = ' '.join([f'assets/photos/{i}.jpg' for i in range(1, 6)] + ['assets/photos/6.png', 'assets/photos/7.jpg', 'assets/photos/8.mp4'])
+PHOTOS = ' '.join(['assets/photos/8.mp4'] + [f'assets/photos/{i}.jpg' for i in range(1, 6)] + ['assets/photos/6.png', 'assets/photos/7.jpg'])
 CITY = escape(cfg['city']).replace('-', '\u2011')  # неразрывный дефис
 write('index.html', head(f'{AUTHOR} — рассказы, короткая проза', clip(home_desc, 200), '/', '', 'website', home_schema)
       + f'''
@@ -201,17 +201,12 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
     </div>
   </section>
   <script>
-    // Случайное фото (не видео) при каждой загрузке, не повторяя прошлое.
-    (() => {{
-      const imgs = document.querySelectorAll('img.swap');
-      const list = imgs[0].dataset.photos.split(' ');
-      let last = -1;
-      try {{ last = parseInt(localStorage.getItem('photo'), 10); }} catch (e) {{}}
-      const pics = list.map((src, k) => k).filter(k => !list[k].endsWith('.mp4') && k !== last);
-      const i = pics[Math.floor(Math.random() * pics.length)];
-      imgs.forEach(img => {{ img.src = list[i]; img.dataset.index = i; }});
-      try {{ localStorage.setItem('photo', i); }} catch (e) {{}}
-    }})();
+    // Первым всегда идёт видео: сразу показываем его кадр-обложку, само видео
+    // подставит home-b.js, когда оно загрузится.
+    document.querySelectorAll('img.swap').forEach(img => {{
+      img.src = img.dataset.photos.split(' ')[0].replace(/\.mp4$/, '-poster.jpg');
+      img.dataset.index = 0;
+    }});
   </script>
 
 </main>
