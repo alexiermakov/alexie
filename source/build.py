@@ -183,7 +183,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
     <p class="caps">{escape(cfg['tagline'])}</p>
     <figure class="portrait"><img class="swap" src="assets/photos/1.jpg" data-photos="{PHOTOS}" alt="{AUTHOR}, портрет" width="900" height="1200"></figure>
     <a href="stories/" class="scroll">Рассказы 01–06 →</a>
-    <a href="blog/" class="scroll">Блог →</a>
+    <a href="novel/" class="scroll">Роман →</a>
   </section>
 
   <section class="hero-b" aria-label="Об авторе">
@@ -193,7 +193,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
       <p class="big">
         <a href="about/">{AUTHOR}</a>
         <a class="edge" href="stories/">Рассказы 01–06</a>
-        <a href="blog/">Блог</a>
+        <a href="novel/">Роман</a>
         <a class="edge" href="https://www.instagram.com/alexiermakov/" rel="noopener">{CITY}</a>
         <time class="clock" data-tz="{cfg['timezone']}" aria-label="Время в Петербурге">--:--:--</time>
       </p>
@@ -381,27 +381,78 @@ for i, s in enumerate(stories):
 </html>
 ''')
 
-# ---------- blog (пока заглушка, не индексируется) ----------
-BLOG_NOTE = ('тут совсем скоро будет блог, а может, и не будет, я ещё не решил, как лучше, '
-             'возможно, останется просто ссылка на')
+# ---------- novel ----------
 HOME_BTN = """  <a class="round-btn" href="../" aria-label="На главную">
     <svg viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="32" cy="32" r="32" fill="currentColor"/>
       <path d="M32 21.5 42 30v11.5H22V30z" fill="var(--paper)"/>
     </svg>
   </a>"""
+NOVEL_TITLE = 'Удалить для всех'
 
-blog_schema = {'@context': 'https://schema.org', '@type': 'Blog', 'name': f'Блог — {AUTHOR}',
-               'url': SITE + '/blog/', 'inLanguage': 'ru', 'author': PERSON}
-write('blog/index.html', head(f'Блог — {AUTHOR}', f'Блог {AUTHOR_GEN}: заметки о текстах и письме.', '/blog/', '../', 'website', blog_schema)
-      .replace('content="index, follow, max-image-preview:large"', 'content="noindex, follow"')
+
+def novel_text():
+    """Текст из source/novel.txt: абзацы через пустую строку, «***» — разбивка,
+    первый блок (18+ и предупреждение) — отдельная плашка."""
+    raw = open(os.path.join(SRC, 'novel.txt'), encoding='utf-8').read().strip()
+    blocks = [b.strip() for b in raw.split('\n\n') if b.strip()]
+    age, *warn = blocks[0].split('\n')
+    out = [f'  <p class="novel-age">{escape(age)}</p>',
+           *(f'  <p class="novel-warn">{escape(typo(w))}</p>' for w in warn)]
+    for b in blocks[1:]:
+        if b == '***':
+            out.append(f'  <div class="sep" role="separator"><span aria-hidden="true">*</span></div>')
+        else:
+            out.append('  <p>' + '<br>'.join(escape(typo(line)) for line in b.split('\n')) + '</p>')
+    return '\n'.join(out)
+
+
+def novel_chapters():
+    """Главы из source/novel-chapters.txt: строка «N глава» начинает главу,
+    абзацы через пустую строку, «***» — разбивка (значок *)."""
+    import re
+    raw = open(os.path.join(SRC, 'novel-chapters.txt'), encoding='utf-8').read().strip()
+    out = []
+    for part in re.split(r'^(\d+)\s+глава\s*$', raw, flags=re.M)[1:]:
+        if part.isdigit():
+            n = int(part)
+            if out:
+                out.append('</section>')
+            out.append(f'<section class="novel-chapter text" id="glava-{n}" aria-labelledby="glava-{n}-h">\n'
+                       f'  <h2 class="chapter-head" id="glava-{n}-h"><span class="chapter-n">{n:02d}</span>'
+                       f'<span class="chapter-k">глава</span></h2>')
+            continue
+        blocks = [b.strip() for b in re.split(r'\n\s*\n|\n(?=\*\*\*\s*$)|(?<=^\*\*\*)\n', part.strip(), flags=re.M) if b.strip()]
+        for b in blocks:
+            if b == '***':
+                out.append(f'  <div class="sep" role="separator"><span aria-hidden="true">*</span></div>')
+            else:
+                out.append('  <p>' + escape(typo(' '.join(l.strip() for l in b.split('\n')))) + '</p>')
+    out.append('</section>')
+    return '\n'.join(out)
+
+novel_schema = {'@context': 'https://schema.org', '@type': 'Book', 'name': NOVEL_TITLE, 'bookFormat': 'https://schema.org/EBook',
+                'url': SITE + '/novel/', 'inLanguage': 'ru', 'author': PERSON}
+write('novel/index.html', head(f'Роман «{NOVEL_TITLE}» — {AUTHOR}', f'«{NOVEL_TITLE}» — роман {AUTHOR_GEN}, писателя из Петербурга.',
+                               '/novel/', '../', 'book', novel_schema,
+                               '\n<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">')
       + f"""
-<body id="top" class="blog-page">
-<div class="blog-bg" aria-hidden="true"></div>
+<body id="top" class="novel-page">
 
-<main class="blog">
-  <h1 class="visually-hidden">Блог</h1>
-  <p class="blog-note">{typo(BLOG_NOTE)}&nbsp;<a href="https://t.me/createrweek" rel="noopener">{typo('тг-канал, кстати, вот он')}</a></p>
+<main class="novel">
+<section class="novel-first">
+  <p class="novel-mark" aria-hidden="true">*</p>
+  <h1 class="novel-title">{"<br>".join(escape(NOVEL_TITLE).split())}</h1>
+  <p class="novel-kind">роман</p>
+</section>
+<figure class="novel-photo">
+  <img src="../assets/novel/sea-1600.jpg" srcset="../assets/novel/sea-1000.jpg 667w, ../assets/novel/sea-1600.jpg 1067w"
+       sizes="(max-width: 760px) 100vw, 66svh" alt="Человек на каменистом берегу у моря под облачным небом" width="1067" height="1600" loading="lazy">
+</figure>
+<section class="novel-text text">
+{novel_text()}
+</section>
+{novel_chapters()}
 </main>
 
 {HOME_BTN}
@@ -453,7 +504,7 @@ write('404.html', f'''<!doctype html>
 ''')
 
 # ---------- sitemap & robots ----------
-urls = [('/', '1.0'), ('/stories/', '0.9'), ('/about/', '0.6')] + [(f"/stories/{s['slug']}/", '0.8') for s in stories]
+urls = [('/', '1.0'), ('/stories/', '0.9'), ('/novel/', '0.8'), ('/about/', '0.6')] + [(f"/stories/{s['slug']}/", '0.8') for s in stories]
 write('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n'
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + ''.join(f'  <url><loc>{SITE}{u}</loc><lastmod>{cfg["updated"]}</lastmod><priority>{p}</priority></url>\n'
