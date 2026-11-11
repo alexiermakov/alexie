@@ -435,7 +435,7 @@ novel_schema = {'@context': 'https://schema.org', '@type': 'Book', 'name': NOVEL
                 'url': SITE + '/novel/', 'inLanguage': 'ru', 'author': PERSON}
 write('novel/index.html', head(f'Роман «{NOVEL_TITLE}» — {AUTHOR}', f'«{NOVEL_TITLE}» — роман {AUTHOR_GEN}, писателя из Петербурга.',
                                '/novel/', '../', 'book', novel_schema,
-                               '\n<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">')
+                               '\n<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">', og_image='og-novel.jpg')
       + f"""
 <body id="top" class="novel-page">
 
