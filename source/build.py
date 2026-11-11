@@ -171,7 +171,7 @@ home_schema = {'@context': 'https://schema.org', '@graph': [
 home_desc = f'{AUTHOR} — писатель из Петербурга, рассказы, короткая проза. Читать онлайн'
 
 # Фото и видео для смены на главной (видео — .mp4, показывается без звука).
-PHOTOS = ' '.join(['assets/photos/8.mp4'] + [f'assets/photos/{i}.jpg' for i in range(1, 6)] + ['assets/photos/6.png', 'assets/photos/7.jpg'])
+PHOTOS = ' '.join(['assets/photos/6.png', 'assets/photos/8.mp4'] + [f'assets/photos/{i}.jpg' for i in range(1, 6)] + ['assets/photos/7.jpg'])
 CITY = escape(cfg['city']).replace('-', '\u2011')  # неразрывный дефис
 write('index.html', head(f'{AUTHOR} — рассказы, короткая проза', clip(home_desc, 200), '/', '', 'website', home_schema)
       + f'''
@@ -181,7 +181,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
   <h1 class="visually-hidden">{AUTHOR} — рассказы</h1>
   <section class="hero">
     <p class="caps">{escape(cfg['tagline'])}</p>
-    <figure class="portrait"><img class="swap" src="assets/photos/1.jpg" data-photos="{PHOTOS}" alt="{AUTHOR}, портрет" width="900" height="1200"></figure>
+    <figure class="portrait"><img class="swap" src="assets/photos/6.png" data-photos="{PHOTOS}" alt="{AUTHOR}, портрет" width="900" height="1200"></figure>
     <a href="stories/" class="scroll">Рассказы 01–06 →</a>
     <a href="novel/" class="scroll">Роман →</a>
   </section>
@@ -189,7 +189,7 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
   <section class="hero-b" aria-label="Об авторе">
     <p class="about">{escape(cfg['about'])}</p>
     <div class="hero-b-grid">
-      <img class="swap" src="assets/photos/1.jpg" data-photos="{PHOTOS}" alt="{AUTHOR}, портрет" width="900" height="1200">
+      <img class="swap" src="assets/photos/6.png" data-photos="{PHOTOS}" alt="{AUTHOR}, портрет" width="900" height="1200">
       <p class="big">
         <a href="about/">{AUTHOR}</a>
         <a class="edge" href="stories/">Рассказы 01–06</a>
@@ -200,8 +200,8 @@ write('index.html', head(f'{AUTHOR} — рассказы, короткая пр�
     </div>
   </section>
   <script>
-    // Первым всегда идёт видео: сразу показываем его кадр-обложку, само видео
-    // подставит home-b.js, когда оно загрузится.
+    // Первым идёт круглое фото (лёгкое), видео — вторым и грузится, только когда до него дойдут.
+    // Если первым поставить видео, сразу показываем его кадр-обложку.
     document.querySelectorAll('img.swap').forEach(img => {{
       img.src = img.dataset.photos.split(' ')[0].replace(/\.mp4$/, '-poster.jpg');
       img.dataset.index = 0;

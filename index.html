@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Y6WC1K5HjxvX8Q7aVCYfmcydx08YfO0h7AEWzItE5zQ='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-W1Eojer3RnwE7GxdS1kKtHn/rlmoEjB15EMu+lEwEwk='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Лёша Е — рассказы, короткая проза</title>
@@ -38,7 +38,7 @@
   <h1 class="visually-hidden">Лёша Е — рассказы</h1>
   <section class="hero">
     <p class="caps">Короткая проза о людях, которые живут по расписанию, — до тех пор, пока мир не сдвинется на полградуса</p>
-    <figure class="portrait"><img class="swap" src="assets/photos/1.jpg" data-photos="assets/photos/8.mp4 assets/photos/1.jpg assets/photos/2.jpg assets/photos/3.jpg assets/photos/4.jpg assets/photos/5.jpg assets/photos/6.png assets/photos/7.jpg" alt="Лёша Е, портрет" width="900" height="1200"></figure>
+    <figure class="portrait"><img class="swap" src="assets/photos/6.png" data-photos="assets/photos/6.png assets/photos/8.mp4 assets/photos/1.jpg assets/photos/2.jpg assets/photos/3.jpg assets/photos/4.jpg assets/photos/5.jpg assets/photos/7.jpg" alt="Лёша Е, портрет" width="900" height="1200"></figure>
     <a href="stories/" class="scroll">Рассказы 01–06 →</a>
     <a href="novel/" class="scroll">Роман →</a>
   </section>
@@ -46,7 +46,7 @@
   <section class="hero-b" aria-label="Об авторе">
     <p class="about">писатель из ноябрьского петербурга, пишу короткую прозу и пытаюсь закончить первый роман о мытарствах современного героя, который никак не может найти хоть какую-то опору в свинцовом времени; писать начал после альбома иноагента из лондона, подумал, а ведь классно быть писателем, там богема, признание, девушки и ты в центре внимания, ну а что вы хотите, мне было слегка за двадцать; мои ориентиры хантер томпсон и эдуард лимонов, гонзо-журналистика и желание навязать себя миру через откровенность и уязвимость, характер сложный, не женат, работаю в айти</p>
     <div class="hero-b-grid">
-      <img class="swap" src="assets/photos/1.jpg" data-photos="assets/photos/8.mp4 assets/photos/1.jpg assets/photos/2.jpg assets/photos/3.jpg assets/photos/4.jpg assets/photos/5.jpg assets/photos/6.png assets/photos/7.jpg" alt="Лёша Е, портрет" width="900" height="1200">
+      <img class="swap" src="assets/photos/6.png" data-photos="assets/photos/6.png assets/photos/8.mp4 assets/photos/1.jpg assets/photos/2.jpg assets/photos/3.jpg assets/photos/4.jpg assets/photos/5.jpg assets/photos/7.jpg" alt="Лёша Е, портрет" width="900" height="1200">
       <p class="big">
         <a href="about/">Лёша Е</a>
         <a class="edge" href="stories/">Рассказы 01–06</a>
@@ -57,8 +57,8 @@
     </div>
   </section>
   <script>
-    // Первым всегда идёт видео: сразу показываем его кадр-обложку, само видео
-    // подставит home-b.js, когда оно загрузится.
+    // Первым идёт круглое фото (лёгкое), видео — вторым и грузится, только когда до него дойдут.
+    // Если первым поставить видео, сразу показываем его кадр-обложку.
     document.querySelectorAll('img.swap').forEach(img => {
       img.src = img.dataset.photos.split(' ')[0].replace(/\.mp4$/, '-poster.jpg');
       img.dataset.index = 0;
