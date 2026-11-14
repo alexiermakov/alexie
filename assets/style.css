@@ -444,8 +444,10 @@ body::before {
 /* Текст романа после фото — как основной текст рассказов, колонка по центру. */
 .novel-text { max-width: calc(500px + 2 * var(--gutter)); margin: 0 auto; padding: 32px var(--gutter) calc(var(--gutter) * 2 + 96px); }
 .novel-text p { color: var(--ink); }
-.novel-text .novel-age { font: 600 clamp(48px, 6vw, 88px) / 0.9 var(--sans); letter-spacing: -0.04em; margin-bottom: 0.15em; }
-.novel-text .novel-warn { font: 500 15px/1.3 var(--sans); text-transform: uppercase; letter-spacing: 0.02em; color: var(--mute); margin-bottom: 48px; }
+/* 18+ — тем же шрифтом и размером, что номера глав */
+.novel-text .novel-age { font: 400 clamp(56px, 6vw, 88px) / 0.9 "Even Mono", ui-monospace, monospace; letter-spacing: -0.07em; margin-bottom: 0.15em; }
+/* «Содержит нецензурную брань» — как основной текст романа */
+.novel-text .novel-warn { margin-bottom: 48px; }
 @media (max-width: 760px) { .novel-title { font-size: 64px; } }
 
 /* Главы романа */
@@ -457,3 +459,37 @@ body::before {
 .chapter-n { font: 400 clamp(56px, 6vw, 88px) / 0.9 "Even Mono", ui-monospace, monospace; letter-spacing: -0.07em; }
 .chapter-k { font: 600 clamp(14px, 1.3vw, 18px) / 1 "Geist Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.22em; margin-right: -0.22em; }
  /* на телефоне вдвое крупнее (было 32px) */
+/* ---------- Роман: меню глав ---------- */
+/* Появляется, когда первый экран с названием ушёл вверх (класс .chapters-on ставит novel.js).
+   Десктоп — колонка слева по центру высоты; телефон — круглая кнопка слева внизу, по нажатию — карточка со списком. */
+html:has(.novel-page) { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html:has(.novel-page) { scroll-behavior: auto; } }
+.novel-text { scroll-margin-top: 40px; }
+.chapters { position: fixed; z-index: 14; left: var(--gutter);
+  font: 500 13px/1.2 "Geist Mono", ui-monospace, monospace; color: var(--mute);
+  opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s, transform .3s ease; }
+.chapters-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 14px; }
+.chapters ol { list-style: none; display: grid; gap: 10px; }
+.chapters a { display: flex; align-items: baseline; gap: 10px; font: 400 17px/1.3 "Medeo Serif", Georgia, serif; letter-spacing: 0.005em; transition: color .2s ease; }
+.chapters .nav-n { font: 400 15px/1 "Even Mono", ui-monospace, monospace; letter-spacing: -0.04em; min-width: 1.6em; }
+.chapters a:hover, .chapters a:focus-visible { color: var(--ink); }
+.chapters a[aria-current="true"] { color: var(--ink); }
+.chapters a[aria-current="true"]::after { content: "→"; font: 400 17px/1 var(--sans); }
+.chapters-btn { display: none; }
+
+@media (min-width: 1000px) {
+  .chapters { top: 50%; transform: translate(-8px, -50%); }
+  .chapters-on .chapters { opacity: 1; visibility: visible; transform: translate(0, -50%); }
+}
+@media (max-width: 999px) {
+  .chapters-btn { display: block; left: var(--gutter); margin-left: 0; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s, color .2s; }
+  .chapters-on .chapters-btn { opacity: 1; visibility: visible; }
+  .chapters-btn .i-close { display: none; }
+  .chapters-btn[aria-expanded="true"] .i-list { display: none; }
+  .chapters-btn[aria-expanded="true"] .i-close { display: block; }
+  .chapters { bottom: calc(var(--gutter) + 76px); min-width: 200px; padding: 16px 18px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 10px 40px rgb(0 0 0 / 0.18); transform: translateY(8px); transform-origin: bottom left; }
+  .chapters.open { opacity: 1; visibility: visible; transform: none; }
+  .chapters ol { gap: 14px; }
+}

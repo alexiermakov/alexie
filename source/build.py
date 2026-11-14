@@ -419,8 +419,7 @@ def novel_chapters():
             if out:
                 out.append('</section>')
             out.append(f'<section class="novel-chapter text" id="glava-{n}" aria-labelledby="glava-{n}-h">\n'
-                       f'  <h2 class="chapter-head" id="glava-{n}-h"><span class="chapter-n">{n:02d}</span>'
-                       f'<span class="chapter-k">глава</span></h2>')
+                       f'  <h2 class="chapter-head" id="glava-{n}-h" aria-label="Глава {n}"><span class="chapter-n">{n:02d}</span></h2>')
             continue
         blocks = [b.strip() for b in re.split(r'\n\s*\n|\n(?=\*\*\*\s*$)|(?<=^\*\*\*)\n', part.strip(), flags=re.M) if b.strip()]
         for b in blocks:
@@ -430,6 +429,24 @@ def novel_chapters():
                 out.append('  <p>' + escape(typo(' '.join(l.strip() for l in b.split('\n')))) + '</p>')
     out.append('</section>')
     return '\n'.join(out)
+
+def novel_nav():
+    """Меню глав: на десктопе — колонка слева, на телефоне — круглая кнопка слева внизу,
+    по нажатию раскрывается тот же список (поведение — assets/novel.js)."""
+    import re
+    raw = open(os.path.join(SRC, 'novel-chapters.txt'), encoding='utf-8').read()
+    nums = [int(n) for n in re.findall(r'^(\d+)\s+глава\s*$', raw, flags=re.M)]
+    items = ['    <li><a href="#intro">Вступление</a></li>']
+    items += [f'    <li><a href="#glava-{n}" aria-label="Глава {n}"><span class="nav-n">{n:02d}</span></a></li>' for n in nums]
+    return ('<nav class="chapters" id="chapters" aria-label="Главы романа">\n'
+            '  <p class="chapters-title">Главы</p>\n  <ol>\n' + '\n'.join(items) + '\n  </ol>\n</nav>\n'
+            '<button class="round-btn chapters-btn" type="button" aria-controls="chapters" aria-expanded="false" aria-label="Главы романа">\n'
+            '  <svg viewBox="0 0 64 64" aria-hidden="true">\n'
+            '    <circle cx="32" cy="32" r="32" fill="currentColor"/>\n'
+            '    <path class="i-list" d="M32 24.6 20 22v18.6l12 2.6 12-2.6V22zM32 24.6v18.6" stroke="var(--paper)" stroke-width="2.6" stroke-linejoin="miter" stroke-linecap="butt" fill="none"/>\n'
+            '    <path class="i-close" d="M24 24l16 16M40 24 24 40" stroke="var(--paper)" stroke-width="3" stroke-linecap="round" fill="none"/>\n'
+            '  </svg>\n</button>\n'
+            '<script src="../assets/novel.js" defer></script>')
 
 novel_schema = {'@context': 'https://schema.org', '@type': 'Book', 'name': NOVEL_TITLE, 'bookFormat': 'https://schema.org/EBook',
                 'url': SITE + '/novel/', 'inLanguage': 'ru', 'author': PERSON}
@@ -449,11 +466,12 @@ write('novel/index.html', head(f'Роман «{NOVEL_TITLE}» — {AUTHOR}', f'�
   <img src="../assets/novel/sea-1600.jpg" srcset="../assets/novel/sea-1000.jpg 667w, ../assets/novel/sea-1600.jpg 1067w"
        sizes="(max-width: 760px) 100vw, 66svh" alt="Человек на каменистом берегу у моря под облачным небом" width="1067" height="1600" loading="lazy">
 </figure>
-<section class="novel-text text">
+<section class="novel-text text" id="intro">
 {novel_text()}
 </section>
 {novel_chapters()}
 </main>
+{novel_nav()}
 
 {HOME_BTN}
 </body>
