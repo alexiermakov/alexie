@@ -434,7 +434,8 @@ body::before {
 .novel-first .novel-kind { margin-top: clamp(24px, 4vh, 44px); }
 .novel-mark { font: 600 clamp(28px, 2.6vw, 40px) / 1 "Geist Mono", ui-monospace, monospace; color: var(--ink); margin-bottom: clamp(20px, 3vh, 36px); }
 .novel-title { font: 400 clamp(32px, 5.25vw, 75px) / 0.92 "Even Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: -0.07em; color: var(--ink); }
-.novel-kind { font: 600 clamp(16px, 1.6vw, 22px) / 1 "Geist Mono", ui-monospace, monospace; letter-spacing: 0.22em; margin-right: -0.22em; color: var(--ink); }
+/* «роман» под названием — как основной текст романа */
+.novel-kind { font: 400 calc(17px * var(--scale)) / 1.65 "Medeo Serif", Georgia, serif; letter-spacing: 0.005em; color: var(--ink); }
 .novel-photo { display: flex; justify-content: center; padding: 0 var(--gutter) calc(var(--gutter) * 2 + 64px); }
 .novel-photo img { display: block; height: 100svh; width: auto; max-width: 100%; object-fit: contain; filter: grayscale(1); }
 @media (max-width: 760px) {
