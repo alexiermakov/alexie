@@ -455,6 +455,7 @@ write('novel/index.html', head(f'Роман «{NOVEL_TITLE}» — {AUTHOR}', f'�
                                '\n<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">', og_image='og-novel.jpg')
       + f"""
 <body id="top" class="novel-page">
+<div class="progress" id="progress"></div>
 
 <main class="novel">
 <section class="novel-first">

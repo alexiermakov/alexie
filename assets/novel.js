@@ -1,9 +1,21 @@
-// Роман: меню глав.
+// Роман: полоса прогресса чтения и меню глав.
 // — Меню (и кнопка на телефоне) появляется, когда первый экран с названием ушёл вверх.
 // — Подсвечивается глава, которую сейчас читают.
 // — На телефоне круглая кнопка открывает и закрывает список; закрывается и по выбору главы,
 //   по нажатию мимо и по Esc.
 (() => {
+  // полоса прогресса чтения сверху — как на страницах рассказов
+  const bar = document.getElementById('progress');
+  if (bar) {
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.width = (max > 0 ? Math.min(1, scrollY / max) * 100 : 0) + '%';
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    onScroll();
+  }
+
   const nav = document.getElementById('chapters');
   const btn = document.querySelector('.chapters-btn');
   const first = document.querySelector('.novel-first');
