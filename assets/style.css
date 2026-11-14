@@ -333,7 +333,9 @@ body > main { flex: 1 0 auto; }
   will-change: transform;
 }
 .round-btn svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.round-btn:hover, .round-btn:focus-visible { color: var(--red); }
+/* Красный при наведении — только там, где есть мышь: на телефоне «наведение» залипает после нажатия. */
+.round-btn:focus-visible { color: var(--red); }
+@media (hover: hover) { .round-btn:hover { color: var(--red); } }
 .toc { padding-bottom: 160px; }
 .next { padding-bottom: 140px; }
 .round-btn-left { left: var(--gutter); margin-left: 0; }
