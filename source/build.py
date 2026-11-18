@@ -445,7 +445,7 @@ def novel_nav():
             '    <circle cx="32" cy="32" r="32" fill="currentColor"/>\n'
             '    <path class="i-list" d="M32 24.6 20 22v18.6l12 2.6 12-2.6V22zM32 24.6v18.6" stroke="var(--paper)" stroke-width="2.6" stroke-linejoin="miter" stroke-linecap="butt" fill="none"/>\n'
             '    <path class="i-close" d="M24 24l16 16M40 24 24 40" stroke="var(--paper)" stroke-width="3" stroke-linecap="round" fill="none"/>\n'
-            '  </svg>\n</button>\n'
+            '  </svg>\n  <span class="chapters-num" aria-hidden="true"></span>\n</button>\n'
             '<script src="../assets/novel.js" defer></script>')
 
 novel_schema = {'@context': 'https://schema.org', '@type': 'Book', 'name': NOVEL_TITLE, 'bookFormat': 'https://schema.org/EBook',

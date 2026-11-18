@@ -485,14 +485,21 @@ html:has(.novel-page) { scroll-behavior: smooth; }
   .chapters-on .chapters { opacity: 1; visibility: visible; transform: translate(0, -50%); }
 }
 @media (max-width: 999px) {
-  .chapters-btn { display: block; left: var(--gutter); margin-left: 0; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s, color .2s; }
+  /* кнопка содержания — слева вверху; пока не дошли до 1 главы на ней книжка,
+     дальше — номер текущей главы тем же шрифтом, что в заголовках глав (номер ставит novel.js) */
+  .chapters-btn { display: block; left: var(--gutter); top: var(--gutter); bottom: auto; margin-left: 0; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s, color .2s; }
+  .chapters-num { position: absolute; inset: 0; display: none; place-items: center; padding-top: 0.06em;
+    font: 400 27px/1 "Even Mono", ui-monospace, monospace; letter-spacing: -0.07em; color: var(--paper); }
+  .chapters-btn[data-num] .i-list { display: none; }
+  .chapters-btn[data-num] .chapters-num { display: grid; }
+  .chapters-btn[aria-expanded="true"] .chapters-num { display: none; }
   .chapters-on .chapters-btn { opacity: 1; visibility: visible; }
   .chapters-btn .i-close { display: none; }
   .chapters-btn[aria-expanded="true"] .i-list { display: none; }
   .chapters-btn[aria-expanded="true"] .i-close { display: block; }
-  .chapters { bottom: calc(var(--gutter) + 76px); min-width: 200px; padding: 16px 18px;
+  .chapters { top: calc(var(--gutter) + 76px); min-width: 200px; padding: 16px 18px;
     background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
-    box-shadow: 0 10px 40px rgb(0 0 0 / 0.18); transform: translateY(8px); transform-origin: bottom left; }
+    box-shadow: 0 10px 40px rgb(0 0 0 / 0.18); transform: translateY(-8px); transform-origin: top left; }
   .chapters.open { opacity: 1; visibility: visible; transform: none; }
   .chapters ol { gap: 14px; }
 }

@@ -38,6 +38,10 @@
     let cur = 0;
     sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= mid) cur = i; });
     links.forEach((a, i) => a.setAttribute('aria-current', i === cur ? 'true' : 'false'));
+    // на кнопке содержания (телефон): до 1 главы — книжка, дальше — номер текущей главы
+    const n = cur > 0 ? links[cur].querySelector('.nav-n') : null;
+    if (n) { btn.dataset.num = n.textContent; btn.querySelector('.chapters-num').textContent = n.textContent; }
+    else delete btn.dataset.num;
   };
   let ticking = false;
   addEventListener('scroll', () => {
