@@ -142,11 +142,13 @@ def secure(html):
     inline = re.findall(r'<script>(.*?)</script>', html, re.S)
     hashes = ' '.join("'sha256-" + base64.b64encode(hashlib.sha256(code.encode('utf-8')).digest()).decode() + "'"
                       for code in inline)
+    # счётчик просмотров романа (abacus) — разрешаем запросы к нему только на странице романа
+    connect = "'self' https://abacus.jasoncameron.dev" if 'novel-views' in html else "'self'"
     policy = ("default-src 'self'; "
               f"script-src 'self' {hashes}; ".replace('  ', ' ') +
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
               "font-src 'self' https://fonts.gstatic.com; "
-              "img-src 'self' data:; connect-src 'self'; object-src 'none'; "
+              f"img-src 'self' data:; connect-src {connect}; object-src 'none'; "
               "base-uri 'self'; form-action 'none'")
     meta = (f'<meta http-equiv="Content-Security-Policy" content="{policy}">\n'
             '<meta name="referrer" content="strict-origin-when-cross-origin">\n')
@@ -462,6 +464,10 @@ write('novel/index.html', head(f'Роман «{NOVEL_TITLE}» — {AUTHOR}', f'�
   <p class="novel-mark" aria-hidden="true">*</p>
   <h1 class="novel-title">{"<br>".join(escape(NOVEL_TITLE).split())}</h1>
   <p class="novel-kind">роман</p>
+  <p class="novel-views" hidden>
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M1 8s2.6-4.5 7-4.5S15 8 15 8s-2.6 4.5-7 4.5S1 8 1 8z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+    <span class="novel-views-n"></span>
+  </p>
 </section>
 <figure class="novel-photo">
   <img src="../assets/novel/sea-1600.jpg" srcset="../assets/novel/sea-1000.jpg 667w, ../assets/novel/sea-1600.jpg 1067w"

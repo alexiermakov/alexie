@@ -16,6 +16,26 @@
     onScroll();
   }
 
+  // просмотры страницы романа (abacus.jasoncameron.dev): на alexie.ru первый заход за сессию
+  // прибавляет 1, повторные и локальные просмотры только читают число. Нет ответа — строка скрыта.
+  const views = document.querySelector('.novel-views');
+  if (views) {
+    let counted = false;
+    try { counted = sessionStorage.getItem('novel-viewed') === '1'; } catch (e) {}
+    const live = location.hostname === 'alexie.ru' || location.hostname === 'www.alexie.ru';
+    const op = live && !counted ? 'hit' : 'get';
+    fetch(`https://abacus.jasoncameron.dev/${op}/alexie.ru/novel`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (typeof d.value !== 'number') return;
+        if (op === 'hit') { try { sessionStorage.setItem('novel-viewed', '1'); } catch (e) {} }
+        views.querySelector('.novel-views-n').textContent = d.value.toLocaleString('ru-RU');
+        views.setAttribute('aria-label', `Просмотров: ${d.value}`);
+        views.hidden = false;
+      })
+      .catch(() => {});
+  }
+
   const nav = document.getElementById('chapters');
   const btn = document.querySelector('.chapters-btn');
   const first = document.querySelector('.novel-first');

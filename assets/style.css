@@ -438,6 +438,11 @@ body::before {
 .novel-title { font: 400 clamp(32px, 5.25vw, 75px) / 0.92 "Even Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: -0.07em; color: var(--ink); }
 /* «роман» под названием — как основной текст романа */
 .novel-kind { font: 400 calc(17px * var(--scale)) / 1.65 "Medeo Serif", Georgia, serif; letter-spacing: 0.005em; color: var(--ink); }
+/* просмотры под «роман»: глаз 16 px и число */
+.novel-views { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font: 400 14px / 16px "Geist Mono", ui-monospace, monospace; color: var(--ink); opacity: 0.4; }
+.novel-views[hidden] { display: none; }
+.novel-views svg { flex: none; display: block; width: 16px; height: 16px; }
+.novel-views-n { display: block; }
 .novel-photo { display: flex; justify-content: center; padding: 0 var(--gutter) calc(var(--gutter) * 2 + 64px); }
 .novel-photo img { display: block; height: 100svh; width: auto; max-width: 100%; object-fit: contain; filter: grayscale(1); }
 @media (max-width: 760px) {
