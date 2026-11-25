@@ -488,16 +488,16 @@ write('novel/index.html', head(f'Роман «{NOVEL_TITLE}» — {AUTHOR}', f'�
 # ---------- about ----------
 about_schema = {'@context': 'https://schema.org', '@type': 'ProfilePage', 'name': f'Обо мне — {AUTHOR}',
                 'url': SITE + '/about/', 'inLanguage': 'ru', 'mainEntity': PERSON}
-write('about/index.html', head(f'Обо мне — {AUTHOR}', f'{AUTHOR} — писатель из Петербурга. Связаться в Telegram.',
+write('about/index.html', head(f'Обо мне — {AUTHOR}', clip(cfg['about'], 200),
                                '/about/', '../', 'profile', about_schema, og_image='og-about.jpg')
       + f"""
-<body id="top" class="blog-page about-page">
-<div class="blog-bg" aria-hidden="true"></div>
-
-<main class="blog">
+<body id="top" class="about-page">
+<main class="about-wave">
   <h1 class="visually-hidden">Обо мне</h1>
-  <p class="blog-note">{typo('если я вам зачем-то нужен,')} <a href="https://t.me/alexiermakov" rel="noopener">пишите сюда</a></p>
+  <p class="wave-text">{escape(cfg['about'])}<br>
+    если я вам зачем-то нужен, <a href="https://t.me/alexiermakov" target="_blank" rel="noopener">пишите сюда</a></p>
 </main>
+<script src="../assets/wave.js" defer></script>
 
 {HOME_BTN}
 </body>

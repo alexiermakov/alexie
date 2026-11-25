@@ -417,14 +417,32 @@ body::before {
 @keyframes line-in { from { opacity: 0; filter: blur(14px); translate: 0 0.25em; } }
 @keyframes btn-in  { from { opacity: 0; filter: blur(10px); scale: 0.6; } }
 
-/* Обо мне: тот же макет, что у блога, своё фото (лицо ближе к верху — держим его в кадре). */
-.about-page .blog-bg {
-  background-image: linear-gradient(rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.55)), url("bg/about-1800.jpg");
-  background-position: center 30%;
+/* Обо мне (макет Figma «Hover-2»): текст о себе капсом по центру, фон как у главной (--home-bg),
+   колышется флагом (assets/wave.js). На 1440 px — 33 px и колонка 1033 px; уже — пропорционально, но не мельче 15 px. */
+html:has(.about-page), .about-page { background: #050505; }
+.about-wave {
+  min-height: 100svh; display: grid; place-items: center;
+  padding: 112px var(--gutter); overflow: hidden;
 }
-@media (max-width: 760px) {
-  .about-page .blog-bg { background-image: linear-gradient(rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.55)), url("bg/about-1000.jpg"); }
+.wave-text {
+  width: min(1033px, 100%);
+  font: 400 clamp(15px, 2.3032vw, 33.165px) / normal "Medeo Serif", Georgia, serif;
+  letter-spacing: 0.05em; text-transform: uppercase; text-align: center; color: #fff;
 }
+.wave-text .wv { white-space: nowrap; }
+.wave-text .ch { display: inline-block; transform-origin: 50% 50%; }
+/* «пишите сюда»: подчёркивание у каждой буквы — так оно гнётся вместе с ними
+   (у ссылки целиком оно не дошло бы до букв-блоков) */
+.wave-text a .ch {
+  text-decoration: underline; text-decoration-thickness: from-font;
+  text-underline-position: from-font; text-decoration-skip-ink: none;
+}
+.wave-text a { transition: color .2s ease; }
+@media (hover: hover) { .wave-text a:hover { color: var(--red); } }
+.wave-text a:focus-visible { color: var(--red); outline: none; }
+/* Кнопка «домой» инвертирована: светлый круг, тёмный домик. */
+.about-page .round-btn { color: #f0f0ef; }
+.about-page .round-btn path { fill: #111; }
 
 /* ---------- Роман: первый экран — название Even Mono по центру, под ним «роман» Geist Mono ---------- */
 /* Первый экран: название ближе к верху, через 300 px сразу фото — его видно без прокрутки. */
