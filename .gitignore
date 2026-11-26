@@ -1,2 +1,5 @@
 .DS_Store
 __pycache__/
+
+# полный текст романа без цензуры — только локально, на сайт и GitHub не уходит
+source/*.uncensored.txt

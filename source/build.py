@@ -409,6 +409,14 @@ def novel_text():
     return '\n'.join(out)
 
 
+def redact(html):
+    """[[ооо ооо]] в тексте романа — вырезанное цензурой место: на странице чёрная (в тёмной теме белая)
+    плашка той же длины. В исходнике вместо слов только заглушка, так что текста нет ни в HTML,
+    ни в source/novel-chapters.txt (он тоже доступен на сайте). Полный текст — source/*.uncensored.txt, локально."""
+    return re.sub(r'\[\[(.+?)\]\]', lambda m: '<span class="redact"><span aria-hidden="true">' + m.group(1)
+                  + '</span><span class="visually-hidden">вырезано</span></span>', html)
+
+
 def novel_chapters():
     """Главы из source/novel-chapters.txt: строка «N глава» начинает главу,
     абзацы через пустую строку, «***» — разбивка (значок *)."""
@@ -428,7 +436,7 @@ def novel_chapters():
             if b == '***':
                 out.append(f'  <div class="sep" role="separator"><span aria-hidden="true">*</span></div>')
             else:
-                out.append('  <p>' + escape(typo(' '.join(l.strip() for l in b.split('\n')))) + '</p>')
+                out.append('  <p>' + redact(escape(typo(' '.join(l.strip() for l in b.split('\n'))))) + '</p>')
     out.append('</section>')
     return '\n'.join(out)
 

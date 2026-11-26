@@ -526,3 +526,11 @@ html:has(.novel-page) { scroll-behavior: smooth; }
   .chapters.open { opacity: 1; visibility: visible; transform: none; }
   .chapters ol { gap: 14px; }
 }
+
+/* Роман: вырезанные цензурой места — сплошная плашка цвета текста (чёрная, в тёмной теме белая)
+   той же длины, что и вырезанные слова; под ней только заглушка, её не выделить и не скопировать. */
+.redact {
+  background: var(--ink); color: transparent;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  user-select: none; -webkit-user-select: none;
+}
